@@ -1,0 +1,69 @@
+// 通用样式类
+$bg = #F5F5F5
+
+body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, li, a, p, h1, h2, h3, h4,h5, h6, i, b, textarea, button, input, select, figure, figcaption
+  padding 0
+  margin 0
+  list-style none
+  font-style normal
+  text-decoration none
+  border none
+  font-weight normal
+  font-family "Microsoft Yahei"
+  box-sizing border-box
+  -webkit-tap-highlight-colortransparent
+  -webkit-font-smoothing antialiased
+  &:hover
+    outline none
+
+// 1px上边线
+border-top-1px($color)
+  position relative
+  &::before
+    content ''
+    position absolute
+    z-index 1000
+    left 0
+    top 0
+    width 100%
+    height 1px
+    background-color $color
+
+// 1px下边线
+border-bottom-1px($color)
+  position relative
+  border none
+  &::after
+    content ''
+    position absolute
+    left 0
+    bottom 0
+    width 100%
+    height 1px
+    background-color $color
+    transform scaleY(0.5)
+
+ // 根据屏幕分辨率判断使用@2x图片或者@3x图片
+ bg-image($url)
+   background-image url($url + "@2x.png")
+   @media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3)
+     background-image url($url + "@3x.png")
+
+ // 根据屏幕分辨率自动缩放1px边框线
+ @media only screen and (-webkit-min-device-pixel-ratio: 2)
+   .border-1px
+     &::before
+       transform scaleY(.5)
+
+ @media only screen and (-webkit-min-device-pixel-ratio: 3)
+   .border-1px
+     &::before
+       transform scaleY(.3)
+
+ // 清除浮动
+ clearFix
+    *zoom 1
+    &::after
+      content ''
+      display block
+      clear both
