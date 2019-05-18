@@ -12,4 +12,5 @@ export const SELECTED_ALL_GOODS = 'selected_all_goods'; // 是否选中所有商
 export const SELECTED_SINGLE_GOODS = 'selected_single_goods'; // 是否选中单个商品
 export const DEL_SINGLE_GOODS = 'del_single_goods'; // 是否删除单个商品
 export const DEL_ALL_GOODS = 'del_all_goods'; // 是否删除所有商品
+export const SEARCH_KEYWORDS = 'search_goods'; // 关键词搜索
 

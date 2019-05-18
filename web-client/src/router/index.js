@@ -10,6 +10,7 @@ const Me = ()=> import('./../pages/Me/Me');
 const ShopCar = ()=> import('./../pages/ShopCar/ShopCar');
 const AdminLogin = ()=> import('./../pages/AdminLogin/AdminLogin');
 const Admin = ()=> import('./../pages/Admin/Admin');
+const SearchDetail = ()=> import('./../pages/SearchDetail/SearchDetail');
 
 const Profile = ()=> import('./../pages/Me/Children/Profile');
 const Update = ()=> import('./../pages/Me/Children/Update');
@@ -74,6 +75,11 @@ export default  new VueRouter({
       {path: 'adminupdate', component: AdminUpdate},
       {path: '/admin',redirect: '/admin/admingoods'}
     ],
+  },
+  {
+	  path: '/searchdetail',
+    component: SearchDetail,
+	  meta: {showHeaderTop: true, showHeaderSearch: true}
   },
 	{
 	  path: '/',

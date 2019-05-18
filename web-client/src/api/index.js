@@ -78,3 +78,6 @@ export const changeGoodsInfo = (params) => ajax(BASE_URL + '/api/update_recom_go
 
 // 请求购物车的数据
 export const getCartsGoods = (params) => ajax(BASE_URL + '/api/cart_goods', params);
+
+// 关键词搜索
+export const searchKeywords = (keywords) => ajax(BASE_URL + '/api/searchgoods', {keywords}, 'POST');

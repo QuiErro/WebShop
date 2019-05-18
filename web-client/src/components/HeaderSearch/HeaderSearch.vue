@@ -3,8 +3,8 @@
     <div class="header_img"><img src="../../common/img/logo-round.png" /></div>
 		<div class="header_search">
 				<form>
-					<input type="text" placeholder="搜索  商店/品牌/店铺"/>
-					<input type="button" value="搜索">
+					<input type="text" placeholder="搜索  商品名称" v-model="keywords"/>
+					<input type="button" value="搜索" @click="postSearch">
 				</form>
 				<p>
 					<a>自营日满减</a>
@@ -23,8 +23,14 @@
 <script>
   import { MessageBox } from 'element-ui'
   import {mapState} from 'vuex'
+  import {mapActions} from 'vuex'
 
   export default {
+    data(){
+      return{
+        keywords: ''
+      }
+    },
     computed: {
       ...mapState(['userInfo'])
     },
@@ -38,6 +44,13 @@
             message: "请先登录!",
 			      showClose: true,
           });
+        }
+      },
+      async postSearch(){
+        if(this.keywords){
+          let keywords = this.keywords;
+          this.$store.dispatch('reqSearch',{keywords});
+          this.$router.replace('/searchdetail');
         }
       },
     },

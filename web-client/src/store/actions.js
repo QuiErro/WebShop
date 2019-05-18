@@ -10,7 +10,8 @@ import {
   getCartsGoods,
   deleteGoods,
   changeGoodsCount,
-  deleteAllGoods
+  deleteAllGoods,
+  searchKeywords
 } from '../api'
 
 import {
@@ -27,7 +28,8 @@ import {
   SELECTED_ALL_GOODS,
   SELECTED_SINGLE_GOODS,
   DEL_SINGLE_GOODS,
-  DEL_ALL_GOODS
+  DEL_ALL_GOODS,
+  SEARCH_KEYWORDS
 } from './mutation-types'
 
 export default {
@@ -130,6 +132,15 @@ export default {
     const result = await deleteAllGoods(user_id);
     if(result.success_code === 200){
       commit(DEL_ALL_GOODS);
+    }
+  },
+
+  // 模糊搜索
+  async reqSearch({commit}, {keywords}){
+    const result = await searchKeywords(keywords);
+    if(result.success_code === 200){
+      let searchresults = result.message;
+      commit(SEARCH_KEYWORDS, {searchresults});
     }
   }
 }

@@ -48,6 +48,34 @@ router.get('/api/category', (req, res) => {
 });
 
 /**
+ * 模糊搜索
+ */
+router.post('/api/searchgoods', (req, res) => {
+    // 1.0 获取参数
+    let keywords = req.body.keywords;
+	keywords = keywords.replace(/\s+/g, ' ');
+	keywords = keywords.replace(/(^\s*)|(\s*$)/g, '');
+	let keyArr = keywords.split(' ');
+	let resultsArr = [];
+	for(let i=0; i<keyArr.length; i++){
+		// 1.1 数据库查询的语句
+		let sqlStr = 'SELECT * FROM recommend WHERE goods_name LIKE ?';
+		let param = [ "%" + keyArr[i] + "%" ];
+		// 1.2 执行语句
+		conn.query(sqlStr, param, (error, results, fields) => {
+			if (!error && results.length) {
+				resultsArr = resultsArr.concat(results);
+			}
+		});
+	}
+	setTimeout(() => {
+        if(resultsArr.length){
+			res.json({success_code: 200, message: resultsArr});
+		}
+    }, 200);
+});
+
+/**
  * 获取推荐商品列表
  *  1, 3
  */

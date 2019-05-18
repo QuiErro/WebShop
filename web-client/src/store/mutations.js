@@ -13,7 +13,8 @@ import {
   SELECTED_ALL_GOODS,
   SELECTED_SINGLE_GOODS,
   DEL_SINGLE_GOODS,
-  DEL_ALL_GOODS
+  DEL_ALL_GOODS,
+  SEARCH_KEYWORDS
 } from './mutation-types'
 
 export default {
@@ -90,4 +91,9 @@ export default {
   [DEL_ALL_GOODS](state){
     state.cartgoods = [];
   },
+
+  [SEARCH_KEYWORDS](state, {searchresults}) {
+    state.searchresults = searchresults;
+  },
+
 }

@@ -14,5 +14,7 @@ export default {
   // 用户数据
   userInfo: {},
   // 购物车数据
-  cartgoods: []
+  cartgoods: [],
+  // 搜索结果
+  searchresults: []
 }
