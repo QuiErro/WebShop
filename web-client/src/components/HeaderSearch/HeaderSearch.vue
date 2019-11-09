@@ -4,7 +4,7 @@
 		<div class="header_search">
 				<form>
 					<input type="text" placeholder="搜索  商品名称" v-model="keywords"/>
-					<input type="button" value="搜索" @click="postSearch">
+          <el-button type="danger" icon="el-icon-search" @click="postSearch"></el-button>
 				</form>
 				<p>
 					<a>自营日满减</a>
@@ -74,7 +74,7 @@
 	width: 140px;
 	height: 140px;
   border: 1px solid darkgray;
-  box-shadow: 6px 8px 20px rgba(45,45,45,0.15);
+  box-shadow: 2px 4px 15px rgba(45,45,45,0.15);
   border-radius: 50%;
 }
 .header_img>img{
@@ -97,28 +97,31 @@
 	margin-left: -290px;
 	margin-top: 50px;
 }
-.header_search input:first-child{
+.header_search form{
+  display: flex;
+  align-items: center;
+}
+.header_search input{
 	padding-left: 10px;
 	width: 490px;
 	height: 35px;
 	font-size: 14px;
 	line-height: 35px;
 	border: 2px solid #FF0236;
+  border-right: none;
 	outline: none;
 }
-.header_search input:last-child{
-	padding-left:5px;
-	width: 80px;
-	height: 37px;
+.header_search button.el-button.el-button--danger{
+  padding: 0;
+  width: 60px;
+  height: 35px;
 	font-size: 18px;
-	line-height: 37px;
-	text-align: center;
-	letter-spacing:5px;
-	background: #F10215;
-	color: white;
-	border: none;
-	outline: none;
-	cursor: pointer;
+  border-radius: 0;
+  outline: none;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .header_search>p>a{
 	display: inline-block;
@@ -140,7 +143,7 @@
 	text-align: center;
 	line-height: 35px;
 	font-size: 12px;
-	background: #F3F3F3;
+	background: #f8f9fa;
 	color: red;
 	cursor: pointer;
 }

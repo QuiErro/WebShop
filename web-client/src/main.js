@@ -11,12 +11,14 @@ Vue.use(ElementUI);
 
 // 配置图片懒加载
 import VueLazyload from 'vue-lazyload'
-import loading from './common/img/loading.jpg'
+import loading from './common/img/loading.gif'
 Vue.use(VueLazyload, {
   loading
 });
 
-// 导入bootstrap的css文件
+// 引入全局过滤器
+import '@/config/filters'
+
 import 'bootstrap/dist/css/bootstrap.css'
 
 new Vue({

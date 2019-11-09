@@ -110,7 +110,6 @@ export default {
 
   // 是否选中所有商品
   selectedAll({commit}, {isSelectedAll}){
-    console.log(isSelectedAll);
     commit(SELECTED_ALL_GOODS, {isSelectedAll});
   },
 

@@ -47,7 +47,7 @@
           <div :class="{current: !loginMode}">
             <section>
               <section class="login-message">
-                <input type="text" maxlength="11" placeholder="暂时只处理手机注册" v-model="user_name">
+                <input type="text" maxlength="11" placeholder="用户名/手机号" v-model="user_name">
               </section>
               <section class="login-verification">
                 <input type="password" maxlength="18" placeholder="密码" v-if="pwdMode" v-model="pwd">

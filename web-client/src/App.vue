@@ -17,7 +17,6 @@
     name: "App",
     mounted(){
       let userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
-      console.log(userInfo);
       if(userInfo){
         this.syncUserInfo(userInfo);
       }
@@ -32,9 +31,13 @@
   }
 </script>
 
-<style scoped lang="stylus" ref="stylesheet/stylus">
-  #app
-    width 100%
-    height 100%
-    position relative
+<style scoped>
+  #app{
+    width: 100%;
+    height: 100%;
+    position: relative;
+	list-style: none;
+}
 </style>
+  }
+

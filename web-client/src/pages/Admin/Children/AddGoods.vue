@@ -8,6 +8,22 @@
       <el-form-item label="商品名称" prop="short_name" style="width:500px">
         <el-input v-model="ruleForm.short_name"></el-input>
       </el-form-item>
+	  <el-form-item label="商品图片" style="width:500px">
+        <el-upload
+		  list-type="picture-card"
+		  :on-preview="handlePictureCardPreview"
+		  :on-change="handleChange"
+		  :auto-upload="false"
+		  :multiple="false"
+		  limit:1
+		  action="http://localhost:3000"
+		>
+		  <i class="el-icon-plus"></i>
+		</el-upload>
+		<el-dialog :visible.sync="dialogVisible">
+		  <img width="100%" :src="dialogImageUrl" alt="">
+		</el-dialog>
+      </el-form-item>
       <el-form-item label="商品特价" prop="price" style="width:250px">
         <el-input v-model="ruleForm.price" type="number"></el-input>
       </el-form-item>
@@ -45,6 +61,9 @@
   export default {
     data() {
       return {
+	    fileList: [],
+		dialogImageUrl: '',
+		dialogVisible: false,
         ruleForm: {
           goods_id: null,
           short_name: '',
@@ -52,7 +71,7 @@
           price: null,
           sales_tip: '',
           counts: null,
-          category: 1
+          category: 1,
         },
         rules: {
           goods_id: [
@@ -96,6 +115,16 @@
       };
     },
     methods: {
+	  handleChange(file, fileList) {
+	    if(fileList.length > 1){
+			fileList = fileList.slice(-1)
+		}
+        this.fileList = fileList;
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },
       async submitForm(formName) {
         let flag = false;
         this.$refs[formName].validate((valid) => {
@@ -107,7 +136,22 @@
             flag = true;
           }
         });
+		if(!this.fileList.length){
+			flag = false;
+		}
         if(flag){
+		  let formData = new FormData();
+		  formData.append('goods_id', this.$refs[formName].model.goods_id);
+		  formData.append('short_name', this.$refs[formName].model.short_name);
+		  formData.append('goods_name', this.$refs[formName].model.goods_name);
+		  formData.append('counts', this.$refs[formName].model.counts);
+		  formData.append('price', this.$refs[formName].model.price);
+		  formData.append('sales_tip', this.$refs[formName].model.sales_tip);
+		  formData.append('category', this.$refs[formName].model.category);
+		  formData.append('goods_img', this.fileList[0].raw);
+		  
+		  let result = await addGoodsToRecom(formData);
+		  /*
           let result = await addGoodsToRecom({
             goods_id: this.$refs[formName].model.goods_id,
             short_name: this.$refs[formName].model.short_name,
@@ -117,6 +161,7 @@
             sales_tip: this.$refs[formName].model.sales_tip,
             category: this.$refs[formName].model.category
           });
+		  */
           if(result.success_code === 200){
             this.$message({
               type: 'success',

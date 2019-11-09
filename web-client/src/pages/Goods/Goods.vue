@@ -1,9 +1,9 @@
 <template>
-  <div id="container">
+  <div id="container" v-if="goodsDetail[0]">
 			<div class="pro_detail">
 				<div class="pro_img">
 					<div class="tb_booth">
-						<img :src="goodsDetail[0].image_url" class="pro_middle_img" />
+            <img :src="goodsDetail[0].image_url" class="pro_middle_img"/>
 					</div>
 				</div>
 				<div class="pro_meg">
@@ -17,15 +17,14 @@
 							<dt>促销价</dt>
 							<dd>
 								<div class="promo_price">
-									<b>￥</b>
-									<span class="tm-price">{{goodsDetail[0].price / 100 | priceFormat}}</span>
+									<span class="tm-price">{{goodsDetail[0].price / 100 | moneyFormat}}</span>
 									<b>优惠促销</b>
 								</div>
 							</dd>
 						</dl>
             <dl>
 							<dt>市场价</dt>
-							<dd class="nor_price">￥{{goodsDetail[0].normal_price /100 | priceFormat }}</dd>
+							<dd class="nor_price">{{goodsDetail[0].normal_price /100 | moneyFormat }}</dd>
 						</dl>
 						<dl>
 							<dt>本店优惠</dt>
@@ -34,6 +33,13 @@
             <dl>
 							<dt class="sale_tip">{{goodsDetail[0].sales_tip}}</dt>
 						</dl>
+            <dl>
+              <dt>服务承诺</dt>
+              <dd>
+                <span>正品保证</span>
+                <span>极速退货</span>
+              </dd>
+            </dl>
 					</div>
 					<div class="pro_meg_deliver">
 						<dl>
@@ -52,17 +58,8 @@
 							</dd>
 						</dl>
 						<div class="shopping_car">
-							<a @click.prevent="dealWithCellBtnClick(goodsDetail[0])">加入购物车</a>
+							<el-button type="danger" @click.prevent="dealWithCellBtnClick(goodsDetail[0])">加入购物车</el-button>
 						</div>
-					</div>
-					<div class="pro_meg_other">
-						<dl>
-							<dt>服务承诺</dt>
-							<dd>
-								<span>正品保证</span>
-								<span>极速退货</span>
-							</dd>
-						</dl>
 					</div>
 				</div>
 			</div>
@@ -153,25 +150,6 @@
         this.$store.dispatch('getUserInfo');
       }
     },
-    filters: {
-      phoneFormat(phone) {
-        // 1. 转成数组
-        let phoneArr = [...phone];
-        // 2. 遍历
-        let str = '';
-        phoneArr.forEach((item, index)=>{
-            if(index === 3 || index === 4 ||index === 5 ||index === 6 ){
-               str += "*";
-            }else {
-               str += item;
-            }
-        });
-        return str;
-      },
-      priceFormat(price) {
-        return price.toFixed(2);
-      },
-    },
     methods:{
       async post(){
         if(!this.textarea){
@@ -234,14 +212,15 @@
 #container>.pro_comment{
 	width: 73%;
   position: relative;
-  margin: 20px auto 0;
+  margin: 40px auto 0;
   padding: 20px;
   border: 1px solid #ccc;
+  border-bottom: none;
 }
 #container>.pro_judge{
 	width: 73%;
   position: relative;
-  margin: 0 auto 20px;
+  margin: 0 auto 60px;
   padding: 20px;
   border-top: none;
   border: 1px solid #ccc;
@@ -291,21 +270,20 @@
 }
 .pro_detail>.pro_img{
     float: left;
-    width: 460px;
-    height: 100%;
     position: relative;
+    padding: 100px 0;
+    width: 480px;
     border: 1px solid #ccc
 }
 .pro_img>.tb_booth{
 	position: relative;
-    z-index: 1;
-    width: 420px;
-    height: 420px;
-    margin: 20px auto 0;
+  z-index: 1;
 }
 .tb_booth>.pro_middle_img{
-	width: 100%;
-	height: 100%;
+	 width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
 }
 .pro_detail>.pro_meg{
 	margin: 0 0 0 520px;
@@ -322,38 +300,46 @@
     color: #000;
 }
 .pro_meg>.pro_meg_price{
-	background-color: #e9e9e9;
-    padding: 5px;
+  padding: 5px 20px;
+  height: 200px;
+  background-color:rgba(247, 244, 244, 0.6);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 .pro_meg_price dl{
-	padding: 5px;
-	display: block;
-	margin: 10px 0;
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 0 !important;
 	cursor: pointer;
 }
 .pro_meg_price dl dt{
+  width: 70px;
 	color: #999;
-    font-size: 12px;
-    text-align: left;
-    width: 69px;
-    margin: 0 0 0 8px;
-    float: left;
+  font-size: 12px;
 }
 .pro_meg_price dl dd{
-	margin-left: 70px;
-    font-family: Arial;
+  margin-bottom: 0 !important;
+  font-family: Arial;
+}
+.pro_meg_price dl dd div{
+  display: flex;
+  align-items: center;
 }
 .pro_meg_price dl:last-child dd{
-	color: #b5621b;
-	font-size: 15px;
+  color: #FF0036;
+  font-weight: bold;
+	font-size: 12px;
 }
 .promo_price{
 	line-height: 24px;
-    vertical-align: middle;
-    color: #FF0036;
-    font-size: 18px;
-    font-family: Arial;
-    -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
+  color: #FF0036;
+  font-size: 18px;
+  font-family: Arial;
+  -webkit-font-smoothing: antialiased;
 }
 .promo_price b{
 	display: inline-block;
@@ -380,7 +366,7 @@
   width: 80px  !important;
 }
 .pro_meg_deliver{
-	margin: 5px 20px 5px 0;
+	margin: 5px 20px -15px 0;
 	padding: 5px;
 }
 .pro_meg_deliver dl{
@@ -451,36 +437,11 @@
 }
 .shopping_car{
 	margin: 20px auto 0;
+
+  display: flex;
+  justify-content: center;
 }
-.shopping_car>a{
-	display: block;
-	width: 120px;
-	height: 30px;
-	background: #FF0036;
-	color: white;
-	text-align: center;
-	line-height: 30px;
-	cursor: pointer;
-	margin: 0 auto;
-}
-.pro_meg_other{
-	margin: 35px 0;
-}
-.pro_meg_other dl{
-	padding: 5px;
-	color: #999;
-	cursor: pointer;
-	font-size: 12px;
-}
-.pro_meg_other dl dt{
-    font-size: 13px;
-    text-align: left;
-    width: 69px;
-    margin: 0 0 0 8px;
-    float: left;
-}
-.pro_meg_other dl dd span{
-	display: inline-block;
-	margin-right: 10px;
+.shopping_car button{
+  outline: none;
 }
 </style>

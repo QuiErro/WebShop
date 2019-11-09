@@ -10,7 +10,7 @@
 			</div>
 			<div class="cont_op">
 				<div class="con_selet">
-					<input type="checkbox" class="con_selectAll" name="con_selectAll" :checked="isSelectedAll" @click.stop="selectedAll(isSelectedAll)"/>
+					<input type="checkbox" class="con_selectAll" :checked="isSelectedAll" @click.stop="selectedAll(isSelectedAll)"/>
 					<label for="con_selectAll">全选</label>
 				</div>
 				<div>商品信息</div>
@@ -29,7 +29,7 @@
 						</li>
 						<li class="td td-item">
 							<div class="td-item-pic">
-								<img :src="goods.thumb_url"  />
+								<img :src="goods.thumb_url"/>
 							</div>
 							<div class="td-item-info">{{goods.goods_name}}</div>
 						</li>
@@ -105,7 +105,6 @@
       // 2.是否选中所有商品
       selectedAll(isSelectedAll){
         this.isSelectedAll = !isSelectedAll;
-        console.log(isSelectedAll);
         this.$store.dispatch('selectedAll', {isSelectedAll});
         this.getAllGoodsPrice();
       },
@@ -174,12 +173,6 @@
           });
         });
       },
-    },
-    filters: {
-      // 格式化金钱
-      moneyFormat(money){
-        return '￥' + money.toFixed(2);
-      }
     },
   }
 </script>
@@ -251,6 +244,8 @@
 }
 .goods>.item_content{
 	padding: 15px;
+  list-style: none;
+
 	display: flex;
 	justify-content: space-around;
 }

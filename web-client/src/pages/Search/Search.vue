@@ -15,17 +15,7 @@
 					<router-link to="/home" class="goHome">返回首页</router-link>
 				</div>
 				<div class="pro_show">
-					<div class="pro" v-for="(good, index) in recommendshoplist" :key="index">
-						<img :src="good.thumb_url" class="pro_img">
-						<div class="pro_text">
-							<p><em>¥{{good.price / 100 | priceFormat}}</em></p>
-							<p>{{ good.short_name }}</p>
-							<p>西二商城自营店</p>
-						</div>
-						<div class="add_btn">
-							<a @click="goDetail(good.goods_id)">查看详情</a>
-						</div>
-					</div>
+          <ProductItem v-for="(goods) in recommendshoplist" :key="goods.goods_id" :pro="goods"/>
 				</div>
 			</div>
 		</div>
@@ -41,6 +31,7 @@
 
 <script>
   import { mapState } from 'vuex'
+  import ProductItem from '../../components/ProductItem/ProductItem'
 
   export default {
     data(){
@@ -49,6 +40,9 @@
 				currentCate: 1,  // 当前分类
 				pageSize: 3,
       }
+    },
+    components: {
+      ProductItem
     },
     computed: {
       ...mapState(['categoryList','userInfo','recommendshoplist']),
@@ -60,11 +54,6 @@
         });
         return arr;
       }
-    },
-    filters: {
-      priceFormat(price) {
-        return price.toFixed(2);
-      },
     },
     created() {
         this.currentCate = Number(this.$route.params.id);
@@ -222,12 +211,10 @@
 #footer{
 	height: 50px;
 	width: 100%;
-	text-align: center;
+	display: flex;
 }
 #footer>ul.pagination{
 	margin: 0 auto;
-	width: 294px;
-	height: 36px;
 }
 ul.pagination li{
 	float: left;

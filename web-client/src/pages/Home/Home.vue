@@ -12,16 +12,16 @@
 					  class="el-menu-vertical-demo"
 					  background-color="#545c64"
 					  text-color="#fff">
-					  <el-menu-item index="cate.cate_id" v-for="(cate, index) in categoryList" :key="index" @click="getRList(cate.cate_id)">
-						<i :class="cate.cate_icon"></i>
-						<span slot="title">{{cate.cate_name}}</span>
+					  <el-menu-item index="cate.cate_id" v-for="(cate) in categoryList" :key="cate.cate_id" @click="getRList(cate.cate_id)">
+              <i :class="cate.cate_icon"></i>
+              <span slot="title">{{cate.cate_name}}</span>
 					  </el-menu-item>
 					</el-menu>
-			    </el-col>
-			    <!--轮播图-->
+			  </el-col>
+			  <!--轮播图-->
 				<el-col :span="14">
 					<el-carousel v-if="homecasual.length > 0">
-					  <el-carousel-item v-for="(casual, index) in homecasual" :key="index">
+					  <el-carousel-item v-for="(casual) in homecasual" :key="casual.id">
 						<img :src="casual.imgurl" alt="">
 					  </el-carousel-item>
 					</el-carousel>
@@ -40,22 +40,12 @@
 			</el-row>
 
 			<!-- 分类产品展示区域 -->
-			<div class="product" v-for="(cate, index) in categoryList" :key="index">
+			<div class="product" v-for="(cate) in categoryList" :key="cate.cate_id">
 				<div class="pro_line">
 					<h3>{{ cate.cate_name }}</h3><div><a @click.prevent="getRList(cate.cate_id)">MORE</a></div>
 				</div>
 				<div class="pro_show">
-					<div class="pro" v-for="(pro, index2) in homeshoplist[cate.cate_id - 1]" :key="index2">
-						<img v-lazy="pro.thumb_url" class="pro_img">
-						<div class="pro_text">
-							<p><em>¥{{ pro.price / 100 | priceFormat }}</em></p>
-							<p>{{ pro.short_name }}</p>
-							<p>西二商城自营店</p>
-						</div>
-						<div class="add_btn">
-							<a @click="goDetail(pro.goods_id)">查看详情</a>
-						</div>
-					</div>
+          <ProductItem v-for="(pro) in homeshoplist[cate.cate_id - 1]" :key="pro.goods_id" :pro="pro"/>
 				</div>
 			</div>
 		</div>
@@ -68,96 +58,38 @@
 		</div>
 
 		<!--左侧微型购物车区域-->
-		<div id="meg">
-			<div class="meg_nav">
-				<div class="meg_shoppingbag">
-					<img src="./img/meg_showcar.png" />
-					<p>购物车</p>
-					<div><span>0</span></div>
-				</div>
-				<a href="#" class="meg_top">
-					<img src="./img/meg_top.png" />
-				</a>
-			</div>
-			<div class="meg_show">
-				<div class="toolbar_header">
-					<div class="pro_Chk">
-						<input id="pro_ChkAll" type="checkbox">
-					</div>
-					<label for="pro_ChkAll">全选</label>
-					<a href="shoppingBag.html">全屏查看</a>
-				</div>
-				<div class="meg_content">
-					<div class="pro_item">
-						<h4 class="item_title">西二商城自营服饰旗舰店<span class="item_one">¥368.00</span></h4>
-						<div class="item_content">
-							<div class="pro_Chk">
-								<input type="checkbox" class="pro_ChkElem">
-							</div>
-							<div class="item-pic">
-								<img src="./img/pro52.jpg"  />
-							</div>
-							<div class="item-info">万向轮拉杆箱20寸旅行箱</div>
-							<div class="item-amout">
-								<a class="amout_minus">-</a>
-								<input type="text" value="1" class="text_amount" autocomplete="off"/>
-								<a class="amout_puls">+</a>
-							</div>
-							<div class="item-sum"><strong>¥368.00</strong></div>
-						</div>
-					</div>
-					<div class="pro_item">
-						<h4 class="item_title">西二商城自营服饰旗舰店<span class="item_one">¥78.00</span></h4>
-						<div class="item_content">
-							<div class="pro_Chk">
-								<input type="checkbox" class="pro_ChkElem">
-							</div>
-							<div class="item-pic">
-								<img src="./img/pro53.jpg"  />
-							</div>
-							<div class="item-info">冬季加绒高帮帆布鞋</div>
-							<div class="item-amout">
-								<a class="amout_minus">-</a>
-								<input type="text" value="1" class="text_amount" autocomplete="off"/>
-								<a class="amout_puls">+</a>
-							</div>
-							<div class="item-sum"><strong>¥78.00</strong></div>
-						</div>
-					</div>
-				</div>
-				<div class="toolbar_footer">
-					<div class="pro_total">
-						<h3>
-							<span>已选</span>
-							<strong class="total_count">0</strong>
-							<span>件</span>
-						</h3>
-						<span>
-							<strong class="total_price">￥0.00</strong>
-						</span>
-					</div>
-					<div class="pro_cashier">
-						<span>结算</span>
-					</div>
-				</div>
-			</div>
-		</div>
-    </div>
+    <DrawerSection v-if="this.$route.path.indexOf('/home') != -1" @goShopCar="goShopCar"/>
+  </div>
 </template>
 
 <script>
   import { mapState } from 'vuex'
+  import DrawerSection from './children/DrawerSection/DrawerSection'
+  import ProductItem from '../../components/ProductItem/ProductItem'
+  import { MessageBox } from 'element-ui'
 
   export default {
     computed: {
       ...mapState(['homecasual','categoryList','homeshoplist','userInfo'])
     },
+    components: {
+      DrawerSection,
+      ProductItem
+    },
     methods:{
       getRList(cate_id){
         this.$router.replace('/search/' + cate_id + '/1');
       },
-      goDetail(id){
-        this.$router.replace('/goods/' + id);
+      goShopCar(){
+        if(this.userInfo.id){
+          this.$router.replace('/shopcar');
+        }else{
+          MessageBox({
+            type: 'info',
+            message: "请先登录!",
+			      showClose: true,
+          });
+        }
       },
     },
     mounted() {
@@ -167,27 +99,12 @@
         this.$store.dispatch('reqCategory');
         // 请求当前用户信息
         this.$store.dispatch('getUserInfo');
+        // 请求商品数据
+        if(this.userInfo && this.userInfo.id){
+          let user_id = this.userInfo.id;
+          this.$store.dispatch('reqCartsGoods',{user_id});
+        }
     },
-    filters: {
-        phoneFormat(phone) {
-          // 1. 转成数组
-          let phoneArr = [...phone];
-          console.log(phoneArr);
-          // 2. 遍历
-          let str = '';
-          phoneArr.forEach((item, index)=>{
-              if(index === 3 || index === 4 ||index === 5 ||index === 6 ){
-                str += "*";
-              }else {
-                str += item;
-              }
-          });
-          return str;
-        },
-        priceFormat(price) {
-          return price.toFixed(2);
-        },
-      },
     watch: {
       categoryList() {
         this.$nextTick(() => {
@@ -208,7 +125,7 @@
 		position: relative;
 		margin: 60px auto;
 		width: 100%;
-		background: #F5F5F5;
+		background: rgba(245, 245, 245, 0.5);
 	}
 	#container .el-row .el-col{
 		height: 100%;
@@ -344,40 +261,6 @@
 		width: 980px;
 		height: 200px;
 	}
-	.pro_show>.pro{
-		float: left;
-		margin-right: 20px;
-		width: 300px;
-		height: 100%;
-		background: white;
-		position: relative;
-	}
-	.pro>.pro_img{
-		margin: 20px;
-		width: 120px;
-		height: 120px;
-	}
-	.pro>.pro_text{
-		float: right;
-		margin-top: 30px;
-		height: 130px;
-		width: 140px;
-		line-height: 25px;
-	}
-	.pro_text>p{
-		margin-bottom: 10px;
-	}
-	.pro_text>p:first-child{
-		color: red;
-		font-weight: 900;
-	}
-	.pro_text>p:nth-child(2){
-		font-size: 13px;
-	}
-	.pro_text>p:nth-child(3){
-		font-size: 12px;
-		color: #999;
-	}
 	.pro_1{
 		width:100%;
 		text-align:center;
@@ -386,22 +269,6 @@
 	.pro_1>.item_content{
 		width:100%;
 		text-align:center;
-	}
-	.pro>.add_btn{
-		float: right;
-		position: absolute;
-		bottom: 15px;
-		right: 20px;
-	}
-	.add_btn>a{
-		display: block;
-		width: 120px;
-		height: 25px;
-		background: #FF0036;
-		color: white;
-		text-align: center;
-		line-height: 25px;
-		cursor: pointer;
 	}
 	/*底部对商城的补充说明*/
 	#footer{
@@ -417,256 +284,5 @@
 	#footer>.footer_text{
 		width: 100%;
 		border-top: 1px solid #DEDEDE;
-	}
-	/*首页的右侧固定栏，查看购物车详情*/
-	#meg{
-		position: fixed;
-		right: 0px;
-		top: 0;
-		height: 700px;
-		width: 35px;
-		z-index: 9999;
-	}
-	#meg>.meg_nav{
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 35px;
-		background: #000000;
-	}
-	#meg>.meg_show{
-		position: absolute;
-		top: 0;
-		left: 35px;
-		width: 280px;
-		height: 100%;
-		background: #E6E6E6;
-	}
-	.meg_nav>.meg_shoppingbag{
-		margin-top: 100px;
-		width: 100%;
-		height: 135px;
-	}
-	.meg_shoppingbag>img{
-		width: 35px;
-		height: 35px;
-	}
-	.meg_shoppingbag>p{
-		margin: 5px auto;
-		width: 16px;
-		height: 48px;
-		line-height: 16px;
-		text-align: center;
-		color: white;
-	}
-	.meg_shoppingbag>div{
-		margin: 10px auto;
-		width: 18px;
-		height: 18px;
-	}
-	.meg_shoppingbag>div>span{
-		display: inline-block;
-		width: 18px;
-		height: 18px;
-		line-height: 18px;
-		border-radius: 50%;
-		background: #FF0018;
-		color: white;
-		text-align: center;
-		font-size: 14px;
-	}
-	.meg_nav>.meg_top{
-		display: block;
-		position: absolute;
-		bottom: 50px;
-		width: 100%;
-		height: 30px;
-	}
-	.meg_show>.toolbar_header{
-		width: 100%;
-		height: 35px;
-	}
-	.toolbar_header>.pro_Chk{
-		float: left;
-		width: 25px;
-		height: 100%;
-	}
-	.pro_Chk>#pro_ChkAll{
-		display: block;
-		width: 12px;
-		height: 12px;
-		float: right;
-		margin-top: 12px;
-	}
-	.toolbar_header label{
-		display: inline-block;
-		margin-left: 5px;
-		height: 100%;
-		line-height: 35px;
-		font-size: 12px;
-		color: gray;
-		cursor: pointer;
-	}
-	.toolbar_header a{
-		display: inline-block;
-		float: right;
-		height: 100%;
-		line-height: 35px;
-		font-size: 12px;
-		color: gray;
-		margin-right: 10px;
-	}
-	.toolbar_footer{
-		position: fixed;
-		bottom: 20px;
-		padding: 0 16px;
-		width: 100%;
-		background: #e6e6e6;
-		z-index: 99999;
-	}
-	.toolbar_footer>.pro_total{
-		width: 248px;
-		height: 30px;
-		line-height: 30px;
-		background: #e6e6e6;
-		color: #333;
-	}
-	.pro_total>h3{
-		float: left;
-		width: 100px;
-		height: 30px;
-		color: #000;
-		font-weight: 400;
-		font-size: 12px;
-	}
-	.pro_total>span{
-		float: left;
-		width: 148px;
-		height: 30px;
-		text-align: right;
-	}
-	.pro_total>span>.total_price{
-		font-weight: 600;
-		color: #ff0036;
-		font-size: 12px;
-	}
-	.pro_cashier{
-		width: 248px;
-		height: 40px;
-		line-height: 40px;
-		background: #666;
-		color: white;
-		text-align: center;
-		cursor: not-allowed;
-	}
-	.btn-allow{
-		background: #f22d00;
-		cursor: pointer;
-	}
-	.meg_content{
-		width: 100%;
-		height: 600px;
-		overflow: auto;
-	}
-	.pro_item{
-		width: 100%;
-		height: 90px;
-		margin-bottom: 15px;
-	}
-	.pro_item>.item_title{
-		padding-left: 12px;
-		width: 268px;
-		height: 30px;
-		line-height: 30px;
-		font-size: 12px;
-		background: white;
-		font-weight: 400;
-		cursor: default;
-	}
-	.item_title>span{
-		display: inline-block;
-		float: right;
-		margin-right: 10px;
-		height: 100%;
-		line-height: 30px;
-		color: #666666;
-	}
-	.pro_item>.item_content{
-		width: 100%;
-		height: 60px;
-		background: #f6f6f6;
-		position: relative;
-	}
-	.item_content>.pro_Chk{
-		float: left;
-		width: 25px;
-		height: 100%;
-	}
-	.item_content div{
-		display: inline-block;
-		margin-right: 5px;
-	}
-	.pro_Chk>input{
-		display: block;
-		width: 12px;
-		height: 12px;
-		float: right;
-		margin-top: 24px;
-	}
-	.item-pic>img{
-		margin-top: 8px;
-		width: 45px;
-		height: 45px;
-	}
-	.item-info{
-		margin-top: 10px;
-		width: 50px;
-		height: 40px;
-		line-height: 20px;
-		font-size: 12px;
-		color: #999;
-		overflow:hidden;
-		text-overflow:ellipsis;
-		white-space:nowrap
-	}
-	.item-amout{
-		height: 20px;
-		line-height: 20px;
-		vertical-align: middle;
-		margin-top: -35px;
-	}
-	.item-amout>a{
-		display: inline-block;
-		height: 18px;
-		width: 12px;
-		border: 1px solid #e5e5e5;
-		background: #f0f0f0;
-		text-align: center;
-		line-height: 18px;
-		color: #444;
-		cursor: pointer;
-	}
-	.item-amout>a:hover{
-		color: #f50;
-		border-color: #f60;
-	}
-	.item-amout>.text_amount{
-		width: 18px;
-		height: 15px;
-		text-align: center;
-		font-size: 10px;
-		display: inline-block;
-	}
-	.item-sum{
-		height: 20px;
-		line-height: 20px;
-		position: absolute;
-		top: 20px;
-		right: 5px;
-	}
-	.item-sum>strong{
-		color: #f40;
-		font-size: 13px;
 	}
 </style>

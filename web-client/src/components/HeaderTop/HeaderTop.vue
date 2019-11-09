@@ -9,7 +9,7 @@
 					<a>您好,{{ userInfo.user_phone | phoneFormat }}</a>
 					<a @click="logout">退出登录</a>
 				</li>
-        <li><router-link to="/home">返回首页</router-link></li>
+        <li v-if="this.$route.path.indexOf('/home') === -1"><router-link to="/home">返回首页</router-link></li>
 				<li><a @click.prevent="goMe">个人中心</a></li>
         <li><a @click.prevent="goShopCar">我的购物车</a></li>
 				<li><a @click.prevent="goAdmin">管理员通道</a></li>
@@ -28,23 +28,6 @@
     computed: {
         ...mapState(["userInfo"])
     },
-    filters: {
-        phoneFormat(phone) {
-          // 1. 转成数组
-          let phoneArr = [...phone];
-          console.log(phoneArr);
-          // 2. 遍历
-          let str = '';
-          phoneArr.forEach((item, index)=>{
-              if(index === 3 || index === 4 ||index === 5 ||index === 6 ){
-                str += "*";
-              }else {
-                str += item;
-              }
-          });
-          return str;
-        }
-      },
     methods:{
       ...mapActions(["logOut"]),
       logout(){
@@ -106,7 +89,7 @@
 	width: 100%;
 	height: 30px;
 	background: #F2F2F2;
-  font-family:  "Microsoft YaHei";
+	font-family:  "Microsoft YaHei";
 }
 .header_nav>p{
 	float: left;
@@ -119,6 +102,7 @@
 .header_nav>ul{
 	float: right;
 	margin-right: 50px;
+	list-style: none;
 }
 .header_nav>ul>li{
 	float: left;

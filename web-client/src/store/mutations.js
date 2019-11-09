@@ -61,14 +61,12 @@ export default {
 
   [SELECTED_ALL_GOODS](state, {isSelectedAll}){
     state.cartgoods.forEach((goods)=>{
-      goods.checked = !isSelectedAll;
-      console.log(goods.checked);
-      /*if(goods.checked){
+      if(goods.checked){
         // 该属性存在
-        goods.checked = !isSelected;
+        goods.checked = !isSelectedAll;
       }else{
-        Vue.set(goods, 'checked', !isSelected);
-      }*/
+        Vue.set(goods, 'checked', !isSelectedAll);
+      }
     });
   },
 

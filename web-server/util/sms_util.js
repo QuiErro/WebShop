@@ -1,39 +1,38 @@
-var md5 = require('blueimp-md5');
-var moment = require('moment');
-var Base64 = require('js-base64').Base64;
-var request = require('request');
+import md5 from 'blueimp-md5'
+import moment from 'moment'
+import {Base64} from 'js-base64'
+import request from 'request'
 
 /*生成指定长度的随机数*/
 function randomCode(length) {
-    var chars = ['0','1','2','3','4','5','6','7','8','9'];
-    var result = ""; 
-    for(var i = 0; i < length ; i ++) {
-        var index = Math.ceil(Math.random()*9);
+    let chars = ['0','1','2','3','4','5','6','7','8','9'];
+    let result = ""; 
+    for(let i = 0; i < length ; i ++) {
+        let index = Math.ceil(Math.random()*9);
         result += chars[index];
     }
     return result;
 }
-exports.randomCode = randomCode;
 
 /*向指定号码发送指定验证码*/
 function sendCode(phone, code, callback) {
-    var ACCOUNT_SID = '8aaf070855b647ab0155b9f80994058a';
-    var AUTH_TOKEN = 'aa8aa679414e49df8908ea5b3d043c24';
-    var Rest_URL = 'https://app.cloopen.com:8883';
-    var AppID = '8aaf070855b647ab0155b9f809f90590';
+    let ACCOUNT_SID = '8aaf070855b647ab0155b9f80994058a';
+    let AUTH_TOKEN = 'aa8aa679414e49df8908ea5b3d043c24';
+    let Rest_URL = 'https://app.cloopen.com:8883';
+    let AppID = '8aaf070855b647ab0155b9f809f90590';
     //1. 准备请求url
     /*
      1.使用MD5加密（账户Id + 账户授权令牌 + 时间戳）。其中账户Id和账户授权令牌根据url的验证级别对应主账户。
      时间戳是当前系统时间，格式"yyyyMMddHHmmss"。时间戳有效时间为24小时，如：20140416142030
      2.SigParameter参数需要大写，如不能写成sig=abcdefg而应该写成sig=ABCDEFG
      */
-    var sigParameter = '';
-    var time = moment().format('YYYYMMDDHHmmss');
+    let sigParameter = '';
+    let time = moment().format('YYYYMMDDHHmmss');
     sigParameter = md5(ACCOUNT_SID+AUTH_TOKEN+time);
-    var url = Rest_URL+'/2013-12-26/Accounts/'+ACCOUNT_SID+'/SMS/TemplateSMS?sig='+sigParameter;
+    let url = Rest_URL+'/2013-12-26/Accounts/'+ACCOUNT_SID+'/SMS/TemplateSMS?sig='+sigParameter;
 
     //2. 准备请求体
-    var body = {
+    let body = {
         to : phone,
         appId : AppID,
         templateId : '1',
@@ -46,9 +45,9 @@ function sendCode(phone, code, callback) {
      b.冒号为英文冒号
      c.时间戳是当前系统时间，格式"yyyyMMddHHmmss"，需与SigParameter中时间戳相同。
      */
-    var authorization = ACCOUNT_SID + ':' + time;
+    let authorization = ACCOUNT_SID + ':' + time;
     authorization = Base64.encode(authorization);
-    var headers = {
+    let headers = {
         'Accept' :'application/json',
         'Content-Type' :'application/json;charset=utf-8',
         'Content-Length': JSON.stringify(body).length+'',
@@ -62,14 +61,13 @@ function sendCode(phone, code, callback) {
         headers : headers,
         body : body,
         json : true
-    }, function (error, response, body) {
+    }, (error, response, body) => {
         console.log(error, response, body);
         callback(body.statusCode==='000000');
     });
 }
-exports.sendCode = sendCode;
 
-/*
-sendCode('18912989092', randomCode(6), function (success) {
-    console.log(success);
-})*/
+export default {
+    randomCode,
+    sendCode
+}

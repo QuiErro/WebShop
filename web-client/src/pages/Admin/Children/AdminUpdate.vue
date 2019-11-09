@@ -104,7 +104,6 @@
       async saveGoodsInfo(){
         this.goodsInfo.price = Number(this.goodsInfo.price);
         this.goodsInfo.counts = Number(this.goodsInfo.counts);
-       // console.log(this.goodsInfo);
         let result = await changeGoodsInfo(this.goodsInfo);
         if(result.success_code === 200){
           this.$message({

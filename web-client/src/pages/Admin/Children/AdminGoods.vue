@@ -88,29 +88,24 @@
         this.$router.replace('/admin/adminupdate');
       },
       async handleDelete(index, row) {
-        let flag = false;
-        console.log(index, row);
         this.$confirm('您确定永久删除该商品吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-          flag = true;
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-        if(flag){
-          let result = await deleteRecomGoods(row.goods_id);
+        }).then( async() => {
+		  let result = await deleteRecomGoods(row.goods_id);
           if(result.success_code === 200){
             this.$message({
               type: 'success',
               message: '已删除'
             });
           }
-        }
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
       handleCurrentChange(val) {
         this.currentIndex = val;

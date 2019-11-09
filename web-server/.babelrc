@@ -1,0 +1,9 @@
+// .babelrc   转换高阶语法
+{
+  "presets": [
+    "env"
+  ],
+  "plugins": [
+	"transform-runtime"
+  ]
+}

@@ -5,9 +5,6 @@
 </template>
 
 <script>
-  import {mapState} from 'vuex';
-  import {mapActions} from 'vuex'
-
   export default {
 
   }

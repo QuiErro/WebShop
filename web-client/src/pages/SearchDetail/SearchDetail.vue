@@ -6,17 +6,7 @@
           <router-link to="/home" class="goHome">返回首页</router-link>
         </div>
         <div class="pro_show" v-if="searchresults.length">
-          <div class="pro" v-for="(good, index) in searchresults" :key="index">
-            <img :src="good.thumb_url" class="pro_img">
-            <div class="pro_text">
-              <p><em>¥{{good.price / 100 | priceFormat}}</em></p>
-              <p>{{ good.short_name }}</p>
-              <p>西二商城自营店</p>
-            </div>
-            <div class="add_btn">
-              <a @click="goDetail(good.goods_id)">查看详情</a>
-            </div>
-          </div>
+          <ProductItem v-for="(goods) in searchresults" :key="goods.goods_id" :pro="goods"/>
         </div>
         <div v-else>
           找不到您想要的商品
@@ -28,19 +18,14 @@
 
 <script>
   import { mapState } from 'vuex'
+  import ProductItem from '../../components/ProductItem/ProductItem'
 
   export default {
-    data(){
-      return{
-      }
+    components: {
+      ProductItem
     },
     computed: {
       ...mapState(['searchresults']),
-    },
-    filters: {
-      priceFormat(price) {
-        return price.toFixed(2);
-      },
     },
     methods:{
       goDetail(id){
@@ -153,12 +138,10 @@
 #footer{
 	height: 50px;
 	width: 100%;
-	text-align: center;
+	display: flex;
 }
 #footer>ul.pagination{
 	margin: 0 auto;
-	width: 294px;
-	height: 36px;
 }
 ul.pagination li{
 	float: left;
