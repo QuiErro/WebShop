@@ -16,6 +16,7 @@ let tmp_captcha = '';
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
+    console.log(md5(md5("admin") + S_KEY))
     res.render('index', {title: '西二商城'});
 });
 
@@ -519,6 +520,25 @@ router.get('/api/cart_goods', (req, res) => {
     });
 });
 
+/**
+ * 删除购物车单条商品
+ */
+router.post('/api/delete_goods', (req, res) => {
+    // 获取数据
+    const goods_id = req.body.goods_id;
+	const user_id = req.body.user_id;
+	
+    let sqlStr = "DELETE FROM cart WHERE goods_id =" + goods_id + " AND user_id = " + user_id;
+    conn.query(sqlStr, (error, results, fields) => {
+        if (error) {
+			console.log(error);
+            res.json({err_code: 0, message: '删除失败!'});
+        } else {
+            res.json({success_code: 200, message: '删除成功!'});
+        }
+    });
+});
+
 /*********************************** 用户中心 **************************************** */
 
 /**
@@ -633,6 +653,50 @@ router.post('/api/change_user_phone', (req, res) => {
 /********************************* 后台管理系统 ********************************** */
 
 /**
+ * 管理员登录
+ */
+router.post('/api/admin_login', (req, res)=>{
+    const account = req.body.account;
+    const pwd = req.body.pwd;
+    const md5Pwd = md5(md5(req.body.pwd) + S_KEY);
+
+    if(!account || !pwd){
+        res.json({error_code: 0, message: "账号和密码不得为空！"});
+    }
+
+    let sqlStr = "SELECT * FROM administrators WHERE account = '" + account + "'";
+    conn.query(sqlStr, (error, results, fields) => {
+        if(error){
+            console.log(error);
+            res.json({error_code: 0, message: "服务器内部错误！"});
+        }else if(results[0]){
+            let user = JSON.parse(JSON.stringify(results[0]));
+            if(md5Pwd === user['pwd']){
+                req.session.adminId = user['id'];
+                res.json({success_code: 200, message: "登录成功！"});
+            }else{
+                res.json({error_code: 0, message: "密码错误！"});
+            }
+        }else{
+            res.json({err_code: 0, message: "用户不存在！"});
+        }
+    });
+});
+
+/**
+ * 管理员退出登录
+ */
+router.get('/api/admin_logout', (req, res) => {
+    console.log(req.session.adminId)
+    delete  req.session.adminId;
+	
+    res.json({
+        success_code: 200,
+        message: "退出登录成功"
+    });
+});
+
+/**
  * 修改商品数量 
  */
 router.post('/api/change_goods_count', (req, res) => {
@@ -654,24 +718,23 @@ router.post('/api/change_goods_count', (req, res) => {
 });
 
 /**
- * 删除单条商品
+ * 获取所有用户信息
  */
-router.post('/api/delete_goods', (req, res) => {
-    // 获取数据
-    const goods_id = req.body.goods_id;
-	const user_id = req.body.user_id;
-	
-    let sqlStr = "DELETE FROM cart WHERE goods_id =" + goods_id + " AND user_id = " + user_id;
+router.get('/api/admin_allusers', (req, res) => {
+
+    let sqlStr = 'SELECT id, user_name, user_phone, user_nickname, user_address FROM user_info';
+
     conn.query(sqlStr, (error, results, fields) => {
         if (error) {
 			console.log(error);
-            res.json({err_code: 0, message: '删除失败!'});
+            res.json({err_code: 0, message: '请求用户数据失败'});
         } else {
-            res.json({success_code: 200, message: '删除成功!'});
+            results = JSON.parse(JSON.stringify(results));
+            res.json({success_code: 200, message: results});
         }
     });
-
 });
+
 
 /**
  * 删除recommend单条商品

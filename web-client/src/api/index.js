@@ -80,3 +80,12 @@ export const getCartsGoods = (params) => ajax(BASE_URL + '/api/cart_goods', para
 
 // 关键词搜索
 export const searchKeywords = (keywords) => ajax(BASE_URL + '/api/searchgoods', {keywords}, 'POST');
+
+// 管理员登录
+export const adminLogin = (account, pwd) => ajax(BASE_URL + '/api/admin_login', {account, pwd}, 'POST');
+
+// 管理员退出登录
+export const adminLogout = () => ajax(BASE_URL + '/api/admin_logout');
+
+// 请求所有用户
+export const getAllUsers = () => ajax(BASE_URL + '/api/admin_allusers');

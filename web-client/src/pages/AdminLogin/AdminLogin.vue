@@ -36,7 +36,8 @@
 </template>
 
 <script>
-  import { MessageBox } from 'element-ui';
+  import { MessageBox } from 'element-ui'
+  import { adminLogin } from '../../api/index'
 
   export default {
     name: "Login",
@@ -49,32 +50,33 @@
       }
     },
     methods: {
-      // 3. 密码的显示方式
+      // 密码的显示方式
       dealPwdMode(flag) {
         this.pwdMode = flag;
       },
-      // 5. 登录
+      // 登录
       async login() {
-          // 5.4 前端校验
-          if (!this.user_name) {
-		        MessageBox({
-              type: 'info',
-              message: "请输入用户名",
-			        showClose: true,
-            });
-            return;
-          } else if (!this.pwd) {
-		        MessageBox({
-              type: 'info',
-              message: "请输入密码!",
-			        showClose: true,
-            });
-            return;
-          }
-        if(this.user_name === "admin" && this.pwd === "admin"){
+        // 前端校验
+        if (!this.user_name) {
+		      MessageBox({
+            type: 'info',
+            message: "请输入用户名",
+			      showClose: true,
+          });
+          return;
+        } else if (!this.pwd) {
+	        MessageBox({
+            type: 'info',
+            message: "请输入密码!",
+		        showClose: true,
+          });
+          return;
+        }
+        let result = await adminLogin(this.user_name, this.pwd);
+        if(result.success_code === 200){
           MessageBox({
               type: 'success',
-              message: "登录成功",
+              message: result.message,
 			        showClose: true,
           });
           this.adminInfo.user_name = this.user_name;
@@ -84,7 +86,7 @@
         }else{
           MessageBox({
               type: 'error',
-              message: "用户名或密码错误",
+              message: result.message,
 			        showClose: true,
           });
         }

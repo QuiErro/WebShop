@@ -21,6 +21,7 @@ const AdminSales = ()=> import('./../pages/Admin/Children/AdminSales');
 const AddGoods = ()=> import('./../pages/Admin/Children/AddGoods');
 const AdminGoods = ()=> import('./../pages/Admin/Children/AdminGoods');
 const AdminUpdate = ()=> import('./../pages/Admin/Children/AdminUpdate');
+const AdminUsers = ()=> import('./../pages/Admin/Children/AdminUsers');
 
 // 2. 声明使用
 Vue.use(VueRouter);
@@ -74,6 +75,7 @@ export default  new VueRouter({
     component: Admin,
     children: [
       {path: 'adminsales', component: AdminSales},
+      {path: 'adminusers', component: AdminUsers},
       {path: 'addgoods', component: AddGoods},
       {path: 'admingoods', component: AdminGoods},
       {path: 'adminupdate', component: AdminUpdate},

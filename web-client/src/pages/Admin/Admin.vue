@@ -32,7 +32,11 @@
                 <i class="el-icon-edit"></i>
                 <span slot="title">商品上架</span>
               </el-menu-item>
-              <el-menu-item index="3" @click="goTo('/admin/adminsales')">
+              <el-menu-item index="3" @click="goTo('/admin/adminusers')">
+                <i class="el-icon-collection-tag"></i>
+                <span>用户管理</span>
+              </el-menu-item>
+              <el-menu-item index="4" @click="goTo('/admin/adminsales')">
                 <i class="el-icon-collection-tag"></i>
                 <span>订单管理</span>
               </el-menu-item>
@@ -51,6 +55,7 @@
   import {mapState} from 'vuex';
   import {mapActions} from 'vuex'
   import { MessageBox } from 'element-ui';
+  import {adminLogout} from '../../api/index'
 
   export default {
     created(){
@@ -72,13 +77,16 @@
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '退出成功!'
-          });
-          this.$router.replace('/home');
-          window.localStorage.removeItem("adminInfo");
+        }).then(async () => {
+          let result = await adminLogout();
+          if(result.success_code === 200){
+             this.$message({
+              type: 'success',
+              message: '退出成功!'
+            });
+            this.$router.replace('/home');
+            window.localStorage.removeItem("adminInfo");
+          }
         }).catch(() => {
           this.$message({
             type: 'info',

@@ -1,5 +1,5 @@
 <template>
-  <div id="profile">
+  <div id="admin-sales">
     待完善
   </div>
 </template>
