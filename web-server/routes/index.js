@@ -10,11 +10,12 @@ import md5 from 'blueimp-md5'
 import formidable from 'formidable'
 import {basename} from 'path'
 
-let users = {}; // 用户信息
+const S_KEY = '@WaLQ1314?.LqFtK.Com.#'; // 盐
+const users = {}; // 用户信息
 let tmp_captcha = '';
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/', (req, res, next) => {
     res.render('index', {title: '西二商城'});
 });
 
@@ -27,6 +28,7 @@ router.get('/api/homecasual', (req, res) => {
     conn.query(sqlStr, (error, results, fields) => {
         if (error) {
             res.json({err_code: 0, message: '请求轮播图数据失败'});
+            console.log(error);
         } else {
             results = JSON.parse(JSON.stringify(results));
             res.json({success_code: 200, message: results});
@@ -42,6 +44,7 @@ router.get('/api/category', (req, res) => {
     conn.query(sqlStr, (error, results, fields) => {
         if (error) {
             res.json({err_code: 0, message: '请求商品分类数据失败'});
+            console.log(error);
         } else {
             results = JSON.parse(JSON.stringify(results));
             res.json({success_code: 200, message: results});
@@ -69,6 +72,8 @@ router.post('/api/searchgoods', (req, res) => {
         results = JSON.parse(JSON.stringify(results));
         if (!error && results.length) {
             res.json({success_code: 200, message: results});
+        }else{
+            console.log(error);
         }
     });
 });
@@ -153,11 +158,12 @@ router.get('/api/goodsdetail', (req, res) => {
 
 /**
  * 获取商品评价
- */
+ */ 
 router.get('/api/goodscomment', (req, res) => {
     // 获取参数
     let goodsId = req.query.goodsId;
-	let sqlStr = 'SELECT * FROM comments WHERE goods_id = ' + goodsId;
+
+	let sqlStr = 'SELECT user_info.id, user_info.user_name, user_info.user_nickname, comments.comment_detail, comments.comment_id, comments.comment_rating, comments.goods_id FROM user_info INNER JOIN comments ON user_info.id = comments.user_id WHERE goods_id = ' + goodsId;
 	conn.query(sqlStr, (error, results, fields) => {
 		if (!error) {
             results = JSON.parse(JSON.stringify(results));
@@ -174,9 +180,9 @@ router.post('/api/postcomment', (req, res) => {
 	let goods_id = req.body.goods_id;
 	let comment_detail = req.body.comment_detail;
 	let comment_rating = req.body.comment_rating;
-	let user_name = req.body.user_name;
-    const addSql = "INSERT INTO comments(goods_id, comment_detail, comment_rating, user_name) VALUES (?, ?, ?, ?)";
-    const addSqlParams = [goods_id, comment_detail, comment_rating, user_name];
+	let user_id = req.body.user_id;
+    const addSql = "INSERT INTO comments(goods_id, comment_detail, comment_rating, user_id) VALUES (?, ?, ?, ?)";
+    const addSqlParams = [goods_id, comment_detail, comment_rating, user_id];
     conn.query(addSql, addSqlParams, (error, results, fields) => {
         results = JSON.parse(JSON.stringify(results));
         if (!error) {
@@ -204,11 +210,9 @@ router.get('/api/captcha', (req, res) => {
         ignoreChars: '0o1iIO',
         size: 4
     });
-    // console.log(captcha.text);
 
     // 保存
     req.session.captcha = captcha.text.toLocaleLowerCase();
-    // console.log(req.session.captcha);
 	tmp_captcha = captcha.text.toLocaleLowerCase();
 
     // 返回客户端
@@ -261,7 +265,7 @@ router.post('/api/login_code', (req, res) => {
 
     conn.query(sqlStr, (error, results, fields) => {
         if (error) {
-            res.json({err_code: 0, message: '请求数据失败'});
+            res.json({err_code: 0, message: '查询失败'});
 			console.log(error);
         } else {
             results = JSON.parse(JSON.stringify(results));
@@ -273,16 +277,18 @@ router.post('/api/login_code', (req, res) => {
                     message: {
 						id: results[0].id,
                         user_name: results[0].user_name,
+                        user_nickname: results[0].user_nickname || '',
                         user_phone: results[0].user_phone,
 						user_sex: results[0].user_sex,
 						user_address: results[0].user_address,
 						user_sign: results[0].user_sign,
-						user_birthday: results[0].user_birthday
+                        user_birthday: results[0].user_birthday,
+                        user_avatar: results[0].user_avatar
 					}
                 });
             } else { // 新用户
-                const addSql = "INSERT INTO user_info(user_name, user_phone) VALUES (?, ?)";
-                const addSqlParams = [phone, phone];  // 手机验证码注册，默认用手机号充当用户名
+                const addSql = "INSERT INTO user_info(user_name, user_phone, user_avatar) VALUES (?, ?, ?)";
+                const addSqlParams = [phone, phone, 'http://localhost:' + config.port + '/avatar_uploads/'];  // 手机验证码注册，默认用手机号充当用户名
                 conn.query(addSql, addSqlParams, (error, results, fields) => {
                     results = JSON.parse(JSON.stringify(results));
                     if (!error) {
@@ -290,7 +296,8 @@ router.post('/api/login_code', (req, res) => {
                         let sqlStr = "SELECT * FROM user_info WHERE id = '" + results.insertId + "' LIMIT 1";
                         conn.query(sqlStr, (error, results, fields) => {
                             if (error) {
-                                res.json({err_code: 0, message: '请求数据失败'});
+                                res.json({err_code: 0, message: '注册失败'});
+                                console.log(error);
                             } else {
                                 results = JSON.parse(JSON.stringify(results));
                                 
@@ -299,7 +306,8 @@ router.post('/api/login_code', (req, res) => {
                                     message: {
                                         id: results[0].id,
                                         user_name: results[0].user_name,
-                                        user_phone: results[0].user_phone
+                                        user_phone: results[0].user_phone,
+                                        user_avatar: results[0].user_avatar
                                     }
                                 });
                             }
@@ -320,8 +328,7 @@ router.post('/api/login_pwd', (req, res) => {
 	// console.log(tmp_captcha);
     // 获取数据
 	const user_name = req.body.name;
-    const user_phone = req.body.name; //用手机号代替名字测试
-    const user_pwd = md5(req.body.pwd);
+    const user_pwd = md5(md5(req.body.pwd) + S_KEY);
     const captcha = req.body.captcha.toLowerCase();
 
     // 验证图形验证码是否正确
@@ -333,7 +340,7 @@ router.post('/api/login_pwd', (req, res) => {
     tmp_captcha = '';
     
     // 查询数据
-    let sqlStr = "SELECT * FROM user_info WHERE user_phone = '" + user_phone + "' LIMIT 1";
+    let sqlStr = "SELECT * FROM user_info WHERE user_name = '" + user_name + "' LIMIT 1";
     conn.query(sqlStr, (error, results, fields) => {
         if (error) {
             res.json({err_code: 0, message: '用户名不正确!'});
@@ -351,19 +358,21 @@ router.post('/api/login_pwd', (req, res) => {
                         success_code: 200,
                         message: {
                             id: results[0].id,
-                            user_name: results[0].user_name,
-                            user_phone: results[0].user_phone,
-							user_sex: results[0].user_sex,
-							user_address: results[0].user_address,
-							user_sign: results[0].user_sign,
-							user_birthday: results[0].user_birthday
+                            user_name: results[0].user_name || '',
+                            user_nickname: results[0].user_nickname || '',
+                            user_phone: results[0].user_phone || '',
+							user_sex: results[0].user_sex || '',
+							user_address: results[0].user_address || '',
+							user_sign: results[0].user_sign || '',
+							user_birthday: results[0].user_birthday || '',
+                            user_avatar: results[0].user_avatar || ''
                         },
                         info: '登录成功!'
                     });
                 }
             } else { // 新用户
-                const addSql = "INSERT INTO user_info(user_phone, user_pwd) VALUES (?, ?)";
-                const addSqlParams = [user_phone, user_pwd];
+                const addSql = "INSERT INTO user_info(user_name, user_pwd, user_avatar) VALUES (?, ?, ?)";
+                const addSqlParams = [user_name, user_pwd, 'http://localhost:' + config.port + '/avatar_uploads/'];
                 conn.query(addSql, addSqlParams, (error, results, fields) => {
                     results = JSON.parse(JSON.stringify(results));
                     if (!error) {
@@ -371,7 +380,7 @@ router.post('/api/login_pwd', (req, res) => {
                         let sqlStr = "SELECT * FROM user_info WHERE id = '" + results.insertId + "' LIMIT 1";
                         conn.query(sqlStr, (error, results, fields) => {
                             if (error) {
-                                res.json({err_code: 0, message: '请求数据失败'});
+                                res.json({err_code: 0, message: '注册失败'});
                             } else {
                                 results = JSON.parse(JSON.stringify(results));
                                 
@@ -379,8 +388,9 @@ router.post('/api/login_pwd', (req, res) => {
                                     success_code: 200,
                                     message: {
                                         id: results[0].id,
-                                        user_name: results[0].user_name,
-                                        user_phone: results[0].user_phone
+                                        user_name: results[0].user_name || '',
+                                        user_nickname: results[0].user_nickname || '',
+                                        user_avatar: results[0].user_avatar || ''
                                     }
                                 });
                             }
@@ -397,13 +407,12 @@ router.post('/api/login_pwd', (req, res) => {
 * */
 router.get('/api/user_info', (req, res) => {
     // 获取参数
-   // let userId = req.session.userId;  
-   let userId = req.query.user_id;
+   let userId = req.query.user_id || req.session.userId;
    
     let sqlStr = "SELECT * FROM user_info WHERE id = " + userId + " LIMIT 1";
     conn.query(sqlStr, (error, results, fields) => {
         if (error) {
-            res.json({err_code: 0, message: '请求数据失败'});
+            res.json({err_code: 0, message: '请求用户数据失败'});
         } else {
             results = JSON.parse(JSON.stringify(results));
             if (!results[0]) {
@@ -412,7 +421,17 @@ router.get('/api/user_info', (req, res) => {
             } else {
                 res.json({
                     success_code: 200,
-                    message: results[0]
+                    message: {
+                        id: results[0].id,
+                        user_name: results[0].user_name || '',
+                        user_nickname: results[0].user_nickname || '',
+                        user_phone: results[0].user_phone || '',
+                        user_sex: results[0].user_sex || '',
+                        user_address: results[0].user_address || '',
+                        user_sign: results[0].user_sign || '',
+                        user_birthday: results[0].user_birthday || '',
+                        user_avatar: results[0].user_avatar || ''
+                    },
                 });
             }
         }
@@ -437,7 +456,11 @@ router.get('/api/logout', (req, res) => {
  */
 router.post('/api/add_shop_cart', (req, res) => {
     // 验证用户
-     let user_id = req.body.user_id;
+    let user_id = req.body.user_id;
+    if(!user_id){
+        res.json({err_code:0, message:'非法用户'});
+        return;
+    }
     /* if(!user_id || user_id !== req.session.userId){
 		 console.log( req.session.userId);
          res.json({err_code:0, message:'非法用户'});
@@ -466,7 +489,8 @@ router.post('/api/add_shop_cart', (req, res) => {
 				let sql_params = [goods_id, goods_name, thumb_url, price, buy_count, is_pay, user_id, counts];
 				conn.query(add_sql, sql_params, (error, results, fields) => {
 					if (error) {
-						res.json({err_code: 0, message: '加入购物车失败!'});
+                        res.json({err_code: 0, message: '加入购物车失败!'});
+                        console.log(error);
 					} else {
 						res.json({success_code: 200, message: '加入购物车成功!'});
 					}
@@ -501,33 +525,110 @@ router.get('/api/cart_goods', (req, res) => {
  * 修改用户信息 
  */
 router.post('/api/change_user_msg', (req, res) => {
-    // 获取数据
-    const id = req.body.user_id;
-    const user_name = req.body.user_name || '';
-    const user_sex = req.body.user_sex || '';
-    const user_address = req.body.user_address || '';
-    const user_birthday = req.body.user_birthday || '';
-    const user_sign = req.body.user_sign || '';
+    // 获取客户端传过来的商品信息
+	const form = new formidable.IncomingForm();
+    form.uploadDir = config.uploadsAvatarPath;  // 上传图片放置的文件夹
+    form.keepExtensions = true; // 保持文件的原始扩展名
+    form.parse(req, (err, fields, files)=>{
+        if(err){
+            return next(err);
+        }
+		let id = fields.id;
+        let user_nickname = fields.user_nickname || '';
+        let user_sex = fields.user_sex || '';
+        let user_address = fields.user_address || '';
+        let user_birthday = fields.user_birthday || '';
+        let user_sign = fields.user_sign || '';
+        let user_avatar = 'http://localhost:' + config.port + '/avatar_uploads/avatar_default.jpg';
+        if(files.user_avatar){
+            user_avatar = 'http://localhost:' + config.port + '/avatar_uploads/' + basename(files.user_avatar.path); 
+        }
 
-    // 验证
-    if (!id) {
-        res.json({err_code: 0, message: '修改用户信息失败!'});
+        // 验证
+        if (!id) {
+            res.json({err_code: 0, message: '修改用户信息失败!'});
+        }
+
+        // 更新数据
+        let sqlStr = "UPDATE user_info SET user_nickname = ? , user_sex = ?, user_address = ?, user_birthday = ?, user_sign = ?, user_avatar = ? WHERE id = " + id;
+        let strParams = [user_nickname, user_sex, user_address, user_birthday, user_sign, user_avatar];
+        conn.query(sqlStr, strParams, (error, results, fields) => {
+            if (error) {
+                console.log(error);
+                res.json({err_code: 0, message: '修改用户信息失败!'});
+            } else {
+                res.json({success_code: 200, message: '修改用户信息成功!'});
+            }
+        });
+    });
+});
+
+/**
+ * 修改用户密码
+ */
+router.post('/api/change_user_pwd', (req, res) => {
+    // 获取数据
+    let id = req.body.id;
+    let oriPwd = '';
+    let newPwd = md5(md5(req.body.newPwd) + S_KEY);
+    if(req.body.oriPwd){
+        oriPwd = md5(md5(req.body.oriPwd) + S_KEY);
     }
 
-    // 更新数据
-    let sqlStr = "UPDATE user_info SET user_name = ? , user_sex = ?, user_address = ?, user_birthday = ?, user_sign = ? WHERE id = " + id;
-    let strParams = [user_name, user_sex, user_address, user_birthday, user_sign];
-    conn.query(sqlStr, strParams, (error, results, fields) => {
+    let sqlStr = "SELECT * FROM user_info WHERE id = " + id;
+    conn.query(sqlStr, (error, results, fields) => {
         if (error) {
 			console.log(error);
-            res.json({err_code: 0, message: '修改用户信息失败!'});
+            res.json({err_code: 0, message: '查询失败!'});
         } else {
-            res.json({success_code: 200, message: '修改用户信息成功!'});
+            results = JSON.parse(JSON.stringify(results));
+            if (results[0]) { // 用户存在
+                if(!results[0].user_pwd || (results[0].user_pwd && oriPwd === results[0].user_pwd)){
+                    let sqlStr = "UPDATE user_info SET user_pwd = ? WHERE id = " + id;
+                    conn.query(sqlStr, [newPwd], (error, results, fields) => {
+                        if(!error){
+                            res.json({success_code: 200, message: '密码修改成功!'});
+                        }
+                    });
+                }else if(oriPwd != results[0].user_pwd){
+                    res.json({err_code: 0, message: '输入的原始密码错误!'});
+                }
+            } else { 
+                res.json({err_code: 0, message: '非法用户!'});
+            }
+        }
+    });
+});
+
+/**
+  修改手机
+*/
+router.post('/api/change_user_phone', (req, res) => {
+    // 获取数据
+    const id = req.body.id;
+    const phone = req.body.phone;
+    const code = req.body.code;
+
+    // 验证验证码是否正确
+    if (users[phone] !== code) {
+        res.json({err_code: 0, message: '验证码不正确!'});
+    }
+
+    // 查询数据
+    delete  users[phone];
+
+    let sqlStr = "UPDATE user_info SET user_phone = " + phone + " WHERE id = " + id;
+
+    conn.query(sqlStr, (error, results, fields) => {
+        if (error) {
+            res.json({err_code: 0, message: '修改失败'});
+			console.log(error);
+        } else {
+            res.json({success_code: 200, message: '修改成功'});
         }
     });
 
 });
-
 
 /********************************* 后台管理系统 ********************************** */
 
@@ -550,7 +651,6 @@ router.post('/api/change_goods_count', (req, res) => {
             res.json({success_code: 200, message: '修改商品数量成功!'});
         }
     });
-
 });
 
 /**
@@ -629,7 +729,7 @@ router.post('/api/update_recom_goods', (req, res) => {
 router.post('/api/add_shop_recom', (req, res) => {
     // 获取客户端传过来的商品信息
 	const form = new formidable.IncomingForm();
-    form.uploadDir = config.uploadsPath;  // 上传图片放置的文件夹
+    form.uploadDir = config.uploadsGoodsPath;  // 上传图片放置的文件夹
     form.keepExtensions = true; // 保持文件的原始扩展名
     form.parse(req, (err, fields, files)=>{
         if(err){

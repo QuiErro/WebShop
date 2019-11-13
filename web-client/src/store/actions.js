@@ -76,17 +76,20 @@ export default {
 
   // 异步获取用户信息
   async getUserInfo({commit},params){
+    let userInfo = {};
     const result = await getUserInfo(params);
     if(result.success_code === 200){
-       commit(USER_INFO, {userInfo: result.message});
-       window.localStorage.setItem("userInfo",JSON.stringify(result.message));
+      userInfo = result.message;
+      window.localStorage.setItem("userInfo",JSON.stringify(userInfo));
+    }else{
+      userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
     }
+    commit(USER_INFO, {userInfo});
   },
 
   // 退出登录
   async logOut({commit}){
     const result = await getLogout();
-    console.log(result);
     if(result.success_code === 200){
       commit(RESET_USER_INFO);
     }

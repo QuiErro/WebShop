@@ -28,7 +28,7 @@ export const getGoodsDetail = (params) => ajax(BASE_URL + '/api/goodsdetail', pa
 export const getGoodsComment = (params) => ajax(BASE_URL + '/api/goodscomment', params);
 
 // 发布评论
-export const postComment = (goods_id, comment_detail, comment_rating, user_name) => ajax(BASE_URL + '/api/postcomment', {goods_id, comment_detail, comment_rating, user_name}, 'POST');
+export const postComment = (goods_id, comment_detail, comment_rating, user_id) => ajax(BASE_URL + '/api/postcomment', {goods_id, comment_detail, comment_rating, user_id}, 'POST');
 
 // 请求短信验证码
 export const getPhoneCode = (phone) => ajax(BASE_URL + '/api/send_code', {phone});
@@ -46,14 +46,13 @@ export const getUserInfo = (params) => ajax(BASE_URL + '/api/user_info',params);
 export const getLogout = () => ajax(BASE_URL + '/api/logout');
 
 // 修改用户信息
-export const changeUserInfo = (user_id, user_name, user_sex, user_address, user_birthday, user_sign) => ajax(BASE_URL + '/api/change_user_msg', {
-  user_id,
-  user_name,
-  user_sex,
-  user_address,
-  user_birthday,
-  user_sign
-}, 'POST');
+export const changeUserInfo = (params) => ajax(BASE_URL + '/api/change_user_msg', params, 'POST');
+
+// 修改用户密码
+export const changeUserPwd = (id, oriPwd, newPwd) => ajax(BASE_URL + '/api/change_user_pwd', {id, oriPwd, newPwd}, 'POST');
+
+// 修改用户手机
+export const changeUserPhone = (id, phone, code) => ajax(BASE_URL + '/api/change_user_phone', {id, phone, code}, 'POST');
 
 // 加入购物车
 export const addGoodsToCart = (user_id, goods_id, goods_name, thumb_url, price,buy_count, counts) => ajax(BASE_URL + '/api/add_shop_cart', {user_id, goods_id, goods_name, thumb_url, price, buy_count, counts}, 'POST');

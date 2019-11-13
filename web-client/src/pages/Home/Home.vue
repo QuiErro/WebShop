@@ -29,11 +29,16 @@
 				<!-- 登录信息板块 -->
 				<el-col :span="4" class="con_log">
 					<div>
-						<img src="./img/no_login.jpg"/>
+            <img :src="userInfo.user_avatar" v-if="userInfo.user_avatar"/>
+						<img src="./img/no_login.jpg" v-else/>
 					</div>
 					<p>Hi~ 欢迎来到西二商城</p>
 					<p v-if="!userInfo.id"><router-link to="/login">登录</router-link><router-link to="/login">注册</router-link></p>
-					<p v-else class="userIn"><a>{{ userInfo.user_phone | phoneFormat }},您好</a><router-link to="/me">个人中心</router-link></p>
+					<p v-else class="userIn">
+            <a v-if="userInfo.user_nickname">您好,{{ userInfo.user_nickname }}</a>
+            <a v-else>您好,{{ userInfo.user_name | nameFormat }}</a>
+            <router-link to="/me">个人中心</router-link>
+          </p>
 					<button class="welfare">新人福利</button>
 					<button class="vip">加入会员</button>
 				</el-col>
@@ -97,8 +102,6 @@
         this.$store.dispatch('reqHomeCasual');
         // 请求分类数据
         this.$store.dispatch('reqCategory');
-        // 请求当前用户信息
-        this.$store.dispatch('getUserInfo');
         // 请求商品数据
         if(this.userInfo && this.userInfo.id){
           let user_id = this.userInfo.id;

@@ -50,7 +50,7 @@
 
 <script>
   // 引入处理返回顶部的函数
-  import {animate} from "@/config/global"
+  import {animate} from "@/config/utils"
   import DrawerItem from './children/DrawerItem'
   import { mapState } from 'vuex'
 

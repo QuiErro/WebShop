@@ -4,15 +4,19 @@
     <div class="user-detail-group">
       <div class="user-icon">
         <span>头像</span>
-        <img src="../images/no_login.jpg" alt="">
+        <img :src="userInfo.user_avatar" alt="">
       </div>
       <div class="user-item">
         <span>手机</span>
         <span>{{ userInfo.user_phone || '暂无' }}</span>
       </div>
       <div class="user-item">
-        <span>昵称</span>
+        <span>账号</span>
         <span>{{ userInfo.user_name || '暂无' }}</span>
+      </div>
+      <div class="user-item">
+        <span>昵称</span>
+        <span>{{ userInfo.user_nickname || '暂无' }}</span>
       </div>
       <div class="user-item">
         <span>性别</span>
@@ -71,6 +75,7 @@
         align-items center
         img
           width 50px
+          height 50px
           border-radius 50%
       .user-item
         height 50px

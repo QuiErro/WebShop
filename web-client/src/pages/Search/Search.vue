@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="categoryList.length">
 		<div id="container">
 			<div class="product">
 				<div class="pro_line">
@@ -15,7 +15,7 @@
 					<router-link to="/home" class="goHome">返回首页</router-link>
 				</div>
 				<div class="pro_show">
-          <ProductItem v-for="(goods) in recommendshoplist" :key="goods.goods_id" :pro="goods"/>
+          			<ProductItem v-for="(goods) in recommendshoplist" :key="goods.goods_id" :pro="goods"/>
 				</div>
 			</div>
 		</div>
@@ -37,9 +37,9 @@
     data(){
       return{
         activeIndex: 1,  // 当前页码
-				currentCate: 1,  // 当前分类
-				pageSize: 3,
-      }
+			currentCate: 1,  // 当前分类
+			pageSize: 3,
+      	}
     },
     components: {
       ProductItem

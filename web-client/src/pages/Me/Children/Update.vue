@@ -4,18 +4,33 @@
     <div class="user-detail-group">
       <div class="user-icon">
         <span>头像</span>
-        <img src="../images/no_login.jpg" alt="">
+        <el-upload
+          class="avatar-uploader"
+          action=""
+          :auto-upload="false"
+          :show-file-list="false"
+          :before-upload="beforeAvatarUpload"
+          :on-change="handleAvatarChange"
+        >
+          <img v-if="user_avatar" :src="user_avatar_imgUrl" class="avatar">
+          <img v-else src="../images/no_login.jpg" class="avatar">
+          <i class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
       </div>
       <div class="user-item">
         <span>手机</span>
-        <span>{{ userInfo.user_phone }}</span>
+        <span>{{ userInfo.user_phone || "暂未设置" }}</span>
+      </div>
+      <div class="user-item">
+        <span>账号</span>
+        <span>{{ userInfo.user_name || "暂未设置" }}</span>
       </div>
       <div class="user-item">
         <span>昵称</span>
         <el-input
           type="text"
           placeholder="请输入内容"
-          v-model="user_name"
+          v-model="user_nickname"
           maxlength="15"
           show-word-limit
           clearable
@@ -70,24 +85,27 @@
         </el-input>
       </div>
 
-      <button @click="saveUserInfo()">编辑个人信息</button>
+      <el-button type="danger" @click="saveUserInfo()">编辑</el-button>
     </div>
   </div>
 </template>
 
 <script>
-  import {mapState} from 'vuex';
-  import {changeUserInfo} from './../../../api/index';
+  import {mapState} from 'vuex'
+  import {changeUserInfo} from './../../../api/index'
+  import {fileToBase64Url} from "@/config/utils"
 
   export default {
     data() {
       return {
         user_sign: '',
         user_address: '',
-        user_name: '',
+        user_nickname: '',
         user_sex: '',
         user_phone: '',
         user_birthday: '',
+        user_avatar_imgUrl: '',
+        user_avatar: null,
 
         options: [{
           value: '男',
@@ -101,7 +119,7 @@
      mounted(){
         this.user_sign = this.userInfo.user_sign || '';
         this.user_address = this.userInfo.user_address || '';
-        this.user_name = this.userInfo.user_name || '';
+        this.user_nickname = this.userInfo.user_nickname || '';
         this.user_sex = this.userInfo.user_sex || '';
         this.user_phone= this.userInfo.user_phone || '';
         this.user_birthday= this.userInfo.user_birthday || '';
@@ -110,10 +128,37 @@
       ...mapState(["userInfo"])
     },
     methods:{
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 1;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 或 PNG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 1MB!');
+        }
+        return isJPG && isLt2M;
+      },
+      handleAvatarChange(file, fileList){
+        this.user_avatar_imgUrl = URL.createObjectURL(file.raw);
+        this.user_avatar = file.raw;
+      },
       // 修改用户信息
       async saveUserInfo(){
           // 3.1 请求接口
-          let result = await changeUserInfo(this.userInfo.id, this.user_name, this.user_sex, this.user_address, this.user_birthday, this.user_sign);
+          let formData = new FormData();
+          formData.append('id', this.userInfo.id);
+          formData.append('user_nickname', this.user_nickname);
+          formData.append('user_sex', this.user_sex);
+          formData.append('user_address', this.user_address);
+          formData.append('user_birthday', this.user_birthday);
+          formData.append('user_sign', this.user_sign);
+          if(this.user_avatar){
+            formData.append('user_avatar', this.user_avatar);
+          }
+
+          let result = await changeUserInfo(formData);
         // 3.3 返回主界面
         if(result.success_code === 200){
             // 3.2 提示用户
@@ -133,55 +178,90 @@
   }
 </script>
 
-<style scoped lang="stylus" ref="stylesheet/stylus">
-  .user-detail
-    width 70%
-    height 100%
-    margin 20px auto
-    .user-detail-top
-      width 100%
-      height 60px
-      line-height 60px
-      padding-left 10px
-      font-weight bold
-    .user-detail-group
-      .user-icon
-        height 60px
-        padding 0 10px
-        background-color #fff
-        border-bottom: 1px solid #e0e0e0
-        display flex
-        justify-content space-between
-        align-items center
-        img
-          width 50px
-          border-radius 50%
-      .user-item
-        height 50px
-        padding 0 10px
-        background-color #fff
-        border-bottom: 1px solid #e0e0e0
-        display flex
-        justify-content space-between
-        align-items center
-        input
-          border 1px solid #ccc
-          outline none
-          text-align right
-          width 200px
-      button
-        width 20%
-        height 40px
-        line-height 40px
-        background-color #e9232c
-        text-align center
-        margin 60px 0
-        border none
-        font-size 16px
-        color #fff
-        border-radius 10px
-    .right-title-color
-      color #999
-      font-size 14px
+<style scoped>
+  .user-detail{
+    width: 70%;
+    height: 100%;
+    margin: 20px auto;
+  }
+  .user-detail-top{
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    padding-left: 10px;
+    font-weight: bold;
+  }
+  .user-detail-group .user-icon{
+    height: 60px;
+    padding: 0 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .user-detail-group .user-item{
+    height: 50px;
+    padding: 0 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .user-detail-group input{
+    border: 1px solid #ccc;
+    outline: none;
+    text-align: right;
+    width: 200px;
+  }
+  .user-detail-group button{
+    margin: 60px 0;
+    width: 15%;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+  }
+  .right-title-color{
+    color: #999;
+    font-size: 14px;
+  }
+  .avatar-uploader{
+    position: relative;
+    width: 56px;
+    height: 56px;
+  }
+  .avatar-uploader /deep/ .el-upload.el-upload--text {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .avatar-uploader-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 28px;
+    color: #8c939d;
+    width: 100%;;
+    height: 100%;
+    line-height: 56px;
+    text-align: center;
+    opacity: 0;
+  }
+  .avatar-uploader-icon:hover{
+    opacity: 1;
+  }
+  .avatar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
 </style>
 

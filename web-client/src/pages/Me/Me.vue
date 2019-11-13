@@ -17,8 +17,8 @@
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
           <div class="sidebar-sticky">
             <a class="navbar-brand">
-              <img src="./images/no_login.jpg" class="navbar-brand-img
-              mx-auto" alt="...">
+              <img v-if="userInfo.user_avatar" :src="userInfo.user_avatar" class="navbar-brand-img mx-auto">
+              <img v-else src="./images/no_login.jpg" class="navbar-brand-img mx-auto">
             </a>
             <el-menu
               default-active="1"
@@ -27,10 +27,17 @@
                 <i class="el-icon-document-copy"></i>
                 <span slot="title">我的资料</span>
               </el-menu-item>
-              <el-menu-item index="2" @click="goTo('/me/update')">
-                <i class="el-icon-edit"></i>
-                <span slot="title">编辑信息</span>
-              </el-menu-item>
+              <el-submenu index="2">
+                <template slot="title">
+                  <i class="el-icon-edit"></i>
+                  <span>编辑信息</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="2-1" @click="goTo('/me/update')">修改基本信息</el-menu-item>
+                  <el-menu-item index="2-2" @click="goTo('/me/editphone')">修改手机号</el-menu-item>
+                  <el-menu-item index="2-3" @click="goTo('/me/editpwd')">修改密码</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
               <el-submenu index="3">
                 <template slot="title">
                   <i class="el-icon-collection-tag"></i>
@@ -58,6 +65,9 @@
   import {mapActions} from 'vuex'
 
   export default {
+    computed: {
+      ...mapState(["userInfo"])
+    },
     methods:{
       ...mapActions(["logOut"]),
       logout(){
@@ -138,6 +148,19 @@
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
+.sidebar-sticky::-webkit-scrollbar {/*滚动条整体样式*/
+  width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
+}
+.sidebar-sticky::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  background: #a3a1a1;
+}
+.sidebar-sticky::-webkit-scrollbar-track {/*滚动条里面轨道*/
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  border-radius: 10px;
+  background: #EDEDED;
+}
 
 @supports ((position: -webkit-sticky) or (position: sticky)) {
   .sidebar-sticky {
@@ -209,7 +232,10 @@
   background-color: rgba(0, 0, 0, .25);
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
 }
-
+.navbar-brand-img{
+  width: 100px;
+  height: 100px;
+}
 .navbar-nav{
   flex-direction: row !important;
 }

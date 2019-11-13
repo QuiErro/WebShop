@@ -9,6 +9,10 @@ import session from 'express-session'
 
 const app = express();
 
+// 使用cors解决跨域问题
+import cors from 'cors'
+app.use(cors());
+
 app.use(cookieParser());
 
 // 使用express-session保存用户登录状况
@@ -17,13 +21,10 @@ app.use(session({
 	resave: false,
 	saveUninitialized: true,
 	cookie: {
-    maxAge: config.maxAge, 
-  },
+		maxAge: config.maxAge, 
+	},
 }));
 
-// 使用cors解决跨域问题
-import cors from 'cors'
-app.use(cors());
 
 // 请求体
 import bodyParser from 'body-parser'

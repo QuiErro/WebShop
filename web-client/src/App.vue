@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 	<HeaderTop v-show="$route.meta.showHeaderTop"/>
-  <HeaderSearch v-show="$route.meta.showHeaderSearch"/>
+    <HeaderSearch v-show="$route.meta.showHeaderSearch"/>
 	<keep-alive>
       <router-view></router-view>
     </keep-alive>

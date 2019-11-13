@@ -136,32 +136,32 @@
             flag = true;
           }
         });
-		if(!this.fileList.length){
-			flag = false;
-		}
+        if(!this.fileList.length){
+          flag = false;
+        }
         if(flag){
-		  let formData = new FormData();
-		  formData.append('goods_id', this.$refs[formName].model.goods_id);
-		  formData.append('short_name', this.$refs[formName].model.short_name);
-		  formData.append('goods_name', this.$refs[formName].model.goods_name);
-		  formData.append('counts', this.$refs[formName].model.counts);
-		  formData.append('price', this.$refs[formName].model.price);
-		  formData.append('sales_tip', this.$refs[formName].model.sales_tip);
-		  formData.append('category', this.$refs[formName].model.category);
-		  formData.append('goods_img', this.fileList[0].raw);
-		  
-		  let result = await addGoodsToRecom(formData);
-		  /*
-          let result = await addGoodsToRecom({
-            goods_id: this.$refs[formName].model.goods_id,
-            short_name: this.$refs[formName].model.short_name,
-            goods_name: this.$refs[formName].model.goods_name,
-            counts: this.$refs[formName].model.counts,
-            price: this.$refs[formName].model.price,
-            sales_tip: this.$refs[formName].model.sales_tip,
-            category: this.$refs[formName].model.category
-          });
-		  */
+          let formData = new FormData();
+          formData.append('goods_id', this.$refs[formName].model.goods_id);
+          formData.append('short_name', this.$refs[formName].model.short_name);
+          formData.append('goods_name', this.$refs[formName].model.goods_name);
+          formData.append('counts', this.$refs[formName].model.counts);
+          formData.append('price', this.$refs[formName].model.price);
+          formData.append('sales_tip', this.$refs[formName].model.sales_tip);
+          formData.append('category', this.$refs[formName].model.category);
+          formData.append('goods_img', this.fileList[0].raw);
+
+          let result = await addGoodsToRecom(formData);
+          /*
+              let result = await addGoodsToRecom({
+                goods_id: this.$refs[formName].model.goods_id,
+                short_name: this.$refs[formName].model.short_name,
+                goods_name: this.$refs[formName].model.goods_name,
+                counts: this.$refs[formName].model.counts,
+                price: this.$refs[formName].model.price,
+                sales_tip: this.$refs[formName].model.sales_tip,
+                category: this.$refs[formName].model.category
+              });
+          */
           if(result.success_code === 200){
             this.$message({
               type: 'success',

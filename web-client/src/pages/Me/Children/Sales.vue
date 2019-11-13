@@ -1,5 +1,5 @@
 <template>
-  <div id="profile">
+  <div id="sales">
     待完善
   </div>
 </template>

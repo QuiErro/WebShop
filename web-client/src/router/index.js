@@ -14,6 +14,8 @@ const SearchDetail = ()=> import('./../pages/SearchDetail/SearchDetail');
 
 const Profile = ()=> import('./../pages/Me/Children/Profile');
 const Update = ()=> import('./../pages/Me/Children/Update');
+const EditPwd = ()=> import('./../pages/Me/Children/EditPwd');
+const EditPhone = ()=> import('./../pages/Me/Children/EditPhone');
 const Sales = ()=> import('./../pages/Me/Children/Sales');
 const AdminSales = ()=> import('./../pages/Admin/Children/AdminSales');
 const AddGoods = ()=> import('./../pages/Admin/Children/AddGoods');
@@ -52,6 +54,8 @@ export default  new VueRouter({
     children: [
       {path: 'profile', component: Profile},
       {path: 'update', component: Update},
+      {path: 'editpwd', component: EditPwd},
+      {path: 'editphone', component: EditPhone},
       {path: 'sales', component: Sales},
       {path: '/me',redirect: '/me/profile'}
     ],

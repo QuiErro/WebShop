@@ -33,11 +33,13 @@
 <style scoped>
 .pro{
 		float: left;
+    position: relative;
 		margin-right: 20px;
 		width: 300px;
 		height: 100%;
 		background: white;
-		position: relative;
+
+		display: flex;
 	}
 	.pro>.pro_img{
 		margin: 20px;
@@ -45,7 +47,6 @@
 		height: 120px;
 	}
 	.pro>.pro_text{
-		float: right;
 		margin-top: 30px;
 		height: 130px;
 		width: 140px;
@@ -66,7 +67,6 @@
 		color: #999;
 	}
 	.pro>.add_btn{
-		float: right;
 		position: absolute;
 		bottom: 15px;
 		right: 20px;

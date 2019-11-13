@@ -68,7 +68,8 @@
         <div v-if="goodsDetail[0].comments_count">
           <div class="media" v-for="(comment, index) in goodsComment" :key="index">
             <div class="media-body">
-              <h6 class="media-heading">用户:&nbsp;{{comment.user_name | phoneFormat}}</h6>
+              <h6 class="media-heading" v-if="comment.user_nickname">用户:&nbsp;{{ comment.user_nickname }}</h6>
+              <h6 class="media-heading" v-else>用户:&nbsp;{{ comment.user_name | nameFormat }}</h6>
               <span>评论:</span>&nbsp;{{comment.comment_detail}}
               <el-rate
                 v-model="comment.comment_rating"
@@ -85,7 +86,7 @@
           </div>
         </div>
       </div>
-      <div class="pro_judge" v-if="userInfo.user_phone">
+      <div class="pro_judge" v-if="userInfo.user_name">
         <h3>评价该商品</h3>
         <span>为该商品评分</span>
         <el-rate
@@ -160,7 +161,7 @@
            });
            return;
         }
-        let result =  await postComment(this.goodsDetail[0].goods_id, this.textarea, this.rating, this.userInfo.user_phone);
+        let result =  await postComment(this.goodsDetail[0].goods_id, this.textarea, this.rating, this.userInfo.user_id);
         if(result.success_code === 200){
           MessageBox({
               type: 'success',
@@ -183,7 +184,7 @@
       async dealWithCellBtnClick(goods){
          // 1. 发送请求
         // user_id, goods_id, goods_name, thumb_url, price, buy_count, counts
-        if(this.userInfo.user_phone){
+        if(this.userInfo.user_name){
           let result = await addGoodsToCart(this.userInfo.id, goods.goods_id, goods.short_name, goods.thumb_url, goods.price, this.shopNum, goods.counts);
           if(result.success_code === 200){
              MessageBox({

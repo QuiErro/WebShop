@@ -47,7 +47,7 @@
           <div :class="{current: !loginMode}">
             <section>
               <section class="login-message">
-                <input type="text" maxlength="11" placeholder="用户名/手机号" v-model="user_name">
+                <input type="text" maxlength="11" placeholder="账号" v-model="user_name">
               </section>
               <section class="login-verification">
                 <input type="password" maxlength="18" placeholder="密码" v-if="pwdMode" v-model="pwd">
@@ -68,6 +68,10 @@
                   alt="captcha"
                   @click.prevent="getCaptcha()"
                 >
+              </section>
+              <section class="login-hint">
+                温馨提示：未注册帐号的用户账号，登录时将自动注册，且代表已同意
+                <a href="javascript:;">服务协议与隐私政策</a>
               </section>
             </section>
           </div>
@@ -149,7 +153,7 @@
               message: `验证码为:${result.message}, 短信功能暂未开通,十分抱歉对您产生的不便`,
 			        showClose: true,
           });
-		}
+		    }
       },
       // 3. 密码的显示方式
       dealPwdMode(flag) {
@@ -216,7 +220,7 @@
           if (!this.user_name) {
 		        MessageBox({
               type: 'info',
-              message: "请输入用户名/手机/邮箱!",
+              message: "请输入账号!",
 			        showClose: true,
             });
             return;
@@ -244,12 +248,14 @@
 			      clearInterval(this.intervalId);
             this.code = ''; // 验证码
 			      this.pwd = ''; // 密码
-            this.user_name = ''; // 用户名
+            this.user_name = ''; // 账号
             this.captcha = '';  // 图形验证码
           } else {
-            this.userInfo = {
-              message: '登录失败, 手机号或验证码不正确!'
-            };
+            MessageBox({
+              type: 'info',
+              message: '登录失败, 账号或密码或验证码不正确!',
+			        showClose: true,
+            });
           }
         }
 
@@ -264,6 +270,11 @@
           // 6.1 同步用户数据
           this.syncUserInfo(this.userInfo);
           // 6.2 回到主界面
+          MessageBox({
+            type: 'success',
+            message: '登录成功!',
+			      showClose: true,
+          });
           this.$router.back();
           window.localStorage.setItem("userInfo",JSON.stringify(this.userInfo));
           window.localStorage.removeItem("adminInfo");

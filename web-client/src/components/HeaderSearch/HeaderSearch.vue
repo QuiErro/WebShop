@@ -2,10 +2,10 @@
   <div class="header_container">
     <div class="header_img"><img src="../../common/img/logo-round.png" /></div>
 		<div class="header_search">
-				<form>
+				<div>
 					<input type="text" placeholder="搜索  商品名称" v-model="keywords"/>
           <el-button type="danger" icon="el-icon-search" @click="postSearch"></el-button>
-				</form>
+				</div>
 				<p>
 					<a>自营日满减</a>
 					<a>西二女装</a>
@@ -97,7 +97,7 @@
 	margin-left: -290px;
 	margin-top: 50px;
 }
-.header_search form{
+.header_search div{
   display: flex;
   align-items: center;
 }
