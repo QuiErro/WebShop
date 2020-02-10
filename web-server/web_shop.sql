@@ -1,18 +1,35 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : xxxxxxxx
+Source Server         : *****
 Source Server Version : 50720
 Source Host           : localhost:3306
-Source Database       : xxxxxxxx
+Source Database       : web_shop
 
 Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
+Date: 2020-02-10 18:48:43
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for administrators
+-- ----------------------------
+DROP TABLE IF EXISTS `administrators`;
+CREATE TABLE `administrators` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `account` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pwd` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of administrators
+-- ----------------------------
+INSERT INTO `administrators` VALUES ('1', 'admin', '63814a82384f9faca8bcca0f08d86eb9');
 
 -- ----------------------------
 -- Table structure for cart
@@ -28,6 +45,20 @@ CREATE TABLE `cart` (
   `user_id` int(11) NOT NULL,
   `counts` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of cart
+-- ----------------------------
+INSERT INTO `cart` VALUES ('136590526', '【花花公子正品】皮带男士休闲自动扣皮带商务百搭自动扣学生腰带', 'http://t00img.yangkeduo.com/t10img/images/2018-06-22/2fa2b2b9b6423fa01b5a769110d20afb.jpeg', '1380', '1', '0', '8', '50');
+INSERT INTO `cart` VALUES ('344112935', '蓝牙耳机通用所有手机', 'http://t00img.yangkeduo.com/t03img/images/2018-05-05/690f068dfbf940e9a22f71132766bcd1.jpeg', '990', '3', '0', '8', '50');
+INSERT INTO `cart` VALUES ('48367210', '【天然竹浆本色品质纸巾】丝飘抽纸餐巾纸', 'http://t00img.yangkeduo.com/t07img/images/2018-05-27/38a24fafe5166b7e236a01ddf1ec7a04.jpeg', '990', '3', '0', '5', '60');
+INSERT INTO `cart` VALUES ('621723438', '青春励志文学', 'http://t00img.yangkeduo.com/t09img/images/2018-07-20/a6eb38f1b52054d149a0dcbf9539ebf2.jpeg', '955', '4', '0', '5', '50');
+INSERT INTO `cart` VALUES ('55984768', '华为 荣耀9青春版', 'http://t00img.yangkeduo.com/goods/images/2018-08-24/d57f9e6c4c04568324775079cc8ab386.jpeg', '80500', '1', '0', '5', '50');
+INSERT INTO `cart` VALUES ('1031855', '甜曲紫米面包550g', 'http://t00img.yangkeduo.com/goods/images/2018-08-30/1093ac9bfaa77304a8c3f25d4bfcb743.jpeg', '990', '5', '0', '5', '50');
+INSERT INTO `cart` VALUES ('621723438', '青春励志文学', 'http://t00img.yangkeduo.com/t09img/images/2018-07-20/a6eb38f1b52054d149a0dcbf9539ebf2.jpeg', '955', '1', '0', '9', '50');
+INSERT INTO `cart` VALUES ('7657775', '【曹大姐】五香熟牛肉200克无淀粉无添加', 'http://t00img.yangkeduo.com/t08img/images/2018-05-23/2a78ac1b4c151168ceddbb73920cdaef.jpeg', '1390', '3', '0', '9', '50');
+INSERT INTO `cart` VALUES ('2316452', '男士修身弹力小脚裤 品质保证', 'http://t00img.yangkeduo.com/t11img/images/2018-07-15/6982d3a77481e146e9fb81dc31d3a546.jpeg', '2800', '1', '0', '9', '50');
+INSERT INTO `cart` VALUES ('2316452', '男士修身弹力小脚裤 品质保证', 'http://t00img.yangkeduo.com/t11img/images/2018-07-15/6982d3a77481e146e9fb81dc31d3a546.jpeg', '2800', '1', '0', '5', '50');
 
 -- ----------------------------
 -- Table structure for category
@@ -56,23 +87,26 @@ INSERT INTO `category` VALUES ('5', '美食宝典', 'el-icon-ice-cream', '17');
 DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `comment_id` int(11) NOT NULL AUTO_INCREMENT,
-  `goods_id` int(11) DEFAULT NULL,
+  `goods_id` int(11) NOT NULL,
   `comment_detail` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `comment_rating` int(11) DEFAULT NULL,
-  `user_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
   PRIMARY KEY (`comment_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of comments
 -- ----------------------------
-INSERT INTO `comments` VALUES ('1', '136590526', 'good', '5', '1366666666');
-INSERT INTO `comments` VALUES ('16', '136590526', 'nice', '5', '13666666666');
-INSERT INTO `comments` VALUES ('17', '136590526', 'bad', '1', '15666666666');
-INSERT INTO `comments` VALUES ('20', '65676090', 'success', '5', '13666666666');
-INSERT INTO `comments` VALUES ('21', '65676090', 'error', '5', '13666666666');
-INSERT INTO `comments` VALUES ('22', '6225284', '不好用', '2', '13666666666');
-INSERT INTO `comments` VALUES ('23', '6225284', '还可以', '4', '13666666666');
+INSERT INTO `comments` VALUES ('1', '136590526', 'good', '5', '5');
+INSERT INTO `comments` VALUES ('16', '136590526', 'nice', '5', '5');
+INSERT INTO `comments` VALUES ('17', '136590526', 'bad', '1', '8');
+INSERT INTO `comments` VALUES ('20', '65676090', 'success', '5', '5');
+INSERT INTO `comments` VALUES ('21', '65676090', 'error', '5', '5');
+INSERT INTO `comments` VALUES ('22', '6225284', '不好用', '2', '5');
+INSERT INTO `comments` VALUES ('23', '6225284', '还可以', '4', '5');
+INSERT INTO `comments` VALUES ('24', '8836407', '好吃', '5', '5');
+INSERT INTO `comments` VALUES ('25', '621723438', '强烈推荐', '5', '5');
+INSERT INTO `comments` VALUES ('26', '621723438', '毒鸡汤', '2', '9');
 
 -- ----------------------------
 -- Table structure for homecasual
@@ -88,9 +122,15 @@ CREATE TABLE `homecasual` (
 -- ----------------------------
 -- Records of homecasual
 -- ----------------------------
-INSERT INTO `homecasual` VALUES ('1', 'http://127.0.0.1:3000/images/home/s1.png', 'http://mobile.yangkeduo.com/subject.html?subject_id=6153');
-INSERT INTO `homecasual` VALUES ('2', 'http://127.0.0.1:3000/images/home/s2.png', 'http://mobile.yangkeduo.com/promotion_op.html?type=12&id=228');
-INSERT INTO `homecasual` VALUES ('3', 'http://127.0.0.1:3000/images/home/s3.png', 'http://mobile.yangkeduo.com/subject.html?subject_id=6242');
+INSERT INTO `homecasual` VALUES ('1', 'http://localhost:3000/images/home/s1.png', 'http://mobile.yangkeduo.com/subject.html?subject_id=6153');
+INSERT INTO `homecasual` VALUES ('2', 'http://localhost:3000/images/home/s2.png', 'http://mobile.yangkeduo.com/promotion_op.html?type=12&id=228');
+INSERT INTO `homecasual` VALUES ('3', 'http://localhost:3000/images/home/s3.png', 'http://mobile.yangkeduo.com/subject.html?subject_id=6242');
+INSERT INTO `homecasual` VALUES ('4', 'http://localhost:3000/images/home/s4.png', 'http://mobile.yangkeduo.com/subject.html?subject_id=6153');
+INSERT INTO `homecasual` VALUES ('5', 'http://localhost:3000/images/home/s5.png', 'http://mobile.yangkeduo.com/subject.html?subject_id=6230');
+INSERT INTO `homecasual` VALUES ('6', 'http://localhost:3000/images/home/s6.png', 'http://mobile.yangkeduo.com/promotion_op.html?type=12&id=190');
+INSERT INTO `homecasual` VALUES ('7', 'http://localhost:3000/images/home/s7.png', 'http://mobile.yangkeduo.com/promotion_op.html?type=12&id=229');
+INSERT INTO `homecasual` VALUES ('8', 'http://localhost:3000/images/home/s8.png', 'http://mobile.yangkeduo.com/subject.html?subject_id=6153');
+INSERT INTO `homecasual` VALUES ('9', 'http://localhost:3000/images/home/s9.png', 'http://mobile.yangkeduo.com/subject.html?subject_id=6242');
 
 -- ----------------------------
 -- Table structure for recommend
@@ -126,7 +166,7 @@ INSERT INTO `recommend` VALUES ('7451457', '【车安驰】汽车表板蜡仪表
 INSERT INTO `recommend` VALUES ('7657775', '【曹大姐】五香熟牛肉200g/400g/3.2斤礼盒装无淀粉熟食下酒菜', '【曹大姐】五香熟牛肉200克无淀粉无添加', 'http://t00img.yangkeduo.com/t08img/images/2018-05-23/2a78ac1b4c151168ceddbb73920cdaef.jpeg', 'http://t00img.yangkeduo.com/t10img/images/2018-05-23/8ed65c8ec9bb7e996d9050a307edb8cc.jpeg', 'http://t00img.yangkeduo.com/t07img/images/2018-03-09/7549b857a65b32de5924b044d1c6c760.jpeg', '1390', '1990', '16900', '已售8万件', '5', '50', '0');
 INSERT INTO `recommend` VALUES ('7780946', '10支-50支成人儿童衣架成人家用加粗衣架衣挂衣撑子防滑晾衣架', '成人儿童加粗衣架子', 'http://omsproductionimg.yangkeduo.com/images/2017-11-03/f246257588f19bc05942016f17930ca9.jpeg', 'http://omsproductionimg.yangkeduo.com/images/2017-11-03/010c949b1b70b73f4441e9a377aaf8bd.jpeg', 'http://t00img.yangkeduo.com/t09img/images/2018-03-13/91dd25b14013abf8e749de035d23a5a5.jpeg', '405', '800', '3490', '已售5万件', '2', '50', '0');
 INSERT INTO `recommend` VALUES ('8491943', '【买一送七】天才电话手表男女智能手表触屏定位防水儿童手表手机', '智能电话手表触屏定位防水儿童学生手表手机', 'http://t00img.yangkeduo.com/goods/images/2018-08-11/94fb78446ec182a287c4115a54849efe.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-08-11/af6928d63d45342d289aaf0e53bd8ed3.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-08-11/4a22b8378371a8efd6ee95e3326932f7.jpeg', '5800', '6800', '26800', '已售2万件', '4', '50', '0');
-INSERT INTO `recommend` VALUES ('8836407', '【买一送一】买2斤送2斤飞业爆浆麻薯干吃汤圆零食小吃糕点心400g', '1000g爆浆麻薯多规格', 'http://t00img.yangkeduo.com/goods/images/2018-08-01/c17c2b2c862fb8a231565941ababd145.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-08-01/0fc75856ec4319da959a50bf2dd4f7d5.jpeg', 'http://t00img.yangkeduo.com/t03img/images/2018-05-17/4d989c8d2f7af53c1de70b0e32640d8f.jpeg', '850', '1080', '2990', '已售10万+件', '5', '50', '0');
+INSERT INTO `recommend` VALUES ('8836407', '【买一送一】买2斤送2斤飞业爆浆麻薯干吃汤圆零食小吃糕点心400g', '1000g爆浆麻薯多规格', 'http://t00img.yangkeduo.com/goods/images/2018-08-01/c17c2b2c862fb8a231565941ababd145.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-08-01/0fc75856ec4319da959a50bf2dd4f7d5.jpeg', 'http://t00img.yangkeduo.com/t03img/images/2018-05-17/4d989c8d2f7af53c1de70b0e32640d8f.jpeg', '850', '1080', '2990', '已售10万+件', '5', '50', '1');
 INSERT INTO `recommend` VALUES ('9692939', '【现做现发】苏式月饼老式酥皮五仁月饼多口味多规格250g/2000g', '苏式酥皮月饼多口味', 'http://omsproductionimg.yangkeduo.com/images/2017-09-04/4aefe363fa75fd7bf827b65807f4500f.jpeg', 'http://omsproductionimg.yangkeduo.com/images/2017-09-04/5b0a2069ff6aca5fd25d158f81c13039.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-07-24/4ea20537b4628e5a40447cb086e39750.jpeg', '598', '730', '3599', '已售10万+件', '5', '50', '0');
 INSERT INTO `recommend` VALUES ('9948390', '【阿玛依】ins网红四件套 亲肤棉卡通床上用品学生床单被套三件套', 'ins网红亲肤磨毛床上用品四件套', 'http://t00img.yangkeduo.com/goods/images/2018-08-26/9edc0a90bbb56c6c2d3160f37fdcca0b.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-08-26/fdc627f0f3895356f75235ca5490b7da.jpeg', 'http://t00img.yangkeduo.com/t11img/images/2018-05-23/56b04110f8907a71e5f29ee92168ca93.jpeg', '3390', '6100', '58800', '已售10万+件', '2', '50', '0');
 INSERT INTO `recommend` VALUES ('10519372', '8册专注力训练儿童智力开发书2-6岁幼儿益智游戏书找不同思维训练', '专注力游戏书', 'http://t00img.yangkeduo.com/t05img/images/2018-06-21/db850903d0e78944dc68b6cb92a58ed5.jpeg', 'http://t00img.yangkeduo.com/t10img/images/2018-06-21/f39609e97b16487951cacfaa349619e6.jpeg', 'http://omsproductionimg.yangkeduo.com/images/2017-06-12/29c1a24e3ba385d6fa08d8312bdb269f.jpeg', '990', '1180', '5120', '已售3万件', '1', '50', '0');
@@ -161,7 +201,7 @@ INSERT INTO `recommend` VALUES ('482053513', '媛萱美女童套装2018新款春
 INSERT INTO `recommend` VALUES ('554370312', '噢爸兔【超值20/40装】不锈钢清洁球厨房用品铁丝洗碗刷子钢丝球', '20个不锈钢钢丝球', 'http://t00img.yangkeduo.com/t10img/images/2018-05-14/8c1ffe73f416e7293f9cf9a172f1563d.jpeg', 'http://t00img.yangkeduo.com/t01img/images/2018-05-14/9ff4f3612bd095e0d769a38b1ee32b65.jpeg', 'http://t00img.yangkeduo.com/t02img/images/2018-05-03/c454d9a35960004d644e3ff9b1a16f3a.jpeg', '486', '1550', '1990', '已售10万+件', '2', '50', '0');
 INSERT INTO `recommend` VALUES ('586250323', '亏本特卖| Apple苹果iphone6 6plus 移动联通电信4G 6p/6二手手机', '二手苹果6系列手机', 'http://t00img.yangkeduo.com/t03img/images/2018-06-21/1ffc1b12d6d6511ca021ff4101f8c05b.jpeg', 'http://t00img.yangkeduo.com/t01img/images/2018-06-21/7fd4c2ee6e53e1ad7ab8e323c1e03d25.jpeg', 'http://t00img.yangkeduo.com/t07img/images/2018-05-22/2f4e4fcc3362b8730d4a89b6ad3d3aa1.jpeg', '71800', '74800', '369900', '已售3275件', '4', '50', '0');
 INSERT INTO `recommend` VALUES ('590417883', '【3秒去油污】油烟净厨房油污净 地板马桶清洁剂 【多场景可用】', '只需3秒去油污', 'http://t00img.yangkeduo.com/goods/images/2018-09-12/099db0601e0c0d8a154eefd0b98f185e.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-09-12/30d8d7a0ad6324419436fcd8fb5ecc0c.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-09-12/d91497c08d5455fd09405fe8553f5abc.jpeg', '690', '1000', '5000', '已售10万+件', '2', '50', '0');
-INSERT INTO `recommend` VALUES ('621723438', '正版包邮 别在吃苦的年纪选择安逸 青春励志文学畅销排行榜书籍', '青春励志文学', 'http://t00img.yangkeduo.com/t09img/images/2018-07-20/a6eb38f1b52054d149a0dcbf9539ebf2.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-07-20/1cd421b6d97de18dcfb0d3f7e6e5de94.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-07-20/671c3d632d8a08804d754d423f3d1f11.jpeg', '955', '1280', '13380', '已售1000+件', '1', '50', '0');
+INSERT INTO `recommend` VALUES ('621723438', '正版包邮 别在吃苦的年纪选择安逸 青春励志文学畅销排行榜书籍', '青春励志文学', 'http://t00img.yangkeduo.com/t09img/images/2018-07-20/a6eb38f1b52054d149a0dcbf9539ebf2.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-07-20/1cd421b6d97de18dcfb0d3f7e6e5de94.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-07-20/671c3d632d8a08804d754d423f3d1f11.jpeg', '955', '1280', '13380', '已售1000+件', '1', '50', '2');
 INSERT INTO `recommend` VALUES ('626593225', '【亏本 买一送一】斗嘴食间锅巴208g/400g手工老襄阳麻辣二阳零食', '【斗嘴食间】锅巴208g送同款208g', 'http://t00img.yangkeduo.com/t07img/images/2018-07-01/10df32209d5f2f117d37e809f3986ccf.jpeg', 'http://t00img.yangkeduo.com/t10img/images/2018-07-01/f707607f1ce19b8bcdb3682af9c88d51.jpeg', 'http://t00img.yangkeduo.com/t10img/images/2018-07-10/7080de753cfc72201e67191f2f5383d4.jpeg', '850', '1090', '3999', '已售10万+件', '5', '50', '0');
 INSERT INTO `recommend` VALUES ('659359942', '【防油污】防油防潮厨房贴你和TA厨房贴墙纸铝箔纸自粘壁纸耐高温', '防油厨房贴壁纸', 'http://t00img.yangkeduo.com/t11img/images/2018-06-14/97dc2e90577f3d99b74e1283bfd61da3.jpeg', 'http://t00img.yangkeduo.com/t04img/images/2018-06-14/c4275e1311450df9d34df69ecc2731a3.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-08-22/ae0aef0f366813879bcf811610d40005.jpeg', '666', '10800', '28800', '已售10万+件', '2', '50', '0');
 INSERT INTO `recommend` VALUES ('676035553', '湖南特产双娇辣条批发整箱大刀肉面筋零食小吃麻辣辣片150g多规格', '经典小时候的味道辣些年辣条大刀肉', 'http://t00img.yangkeduo.com/goods/images/2018-08-17/91498f5402af975c4dcd711d214d40d3.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-08-17/7ad3d2295fa7eea185dc07b10df1dd1f.jpeg', 'http://t00img.yangkeduo.com/goods/images/2018-08-08/b9ccfdb67d3480a83786b63814fc4be9.jpeg', '457', '650', '5800', '已售10万+件', '5', '50', '0');
@@ -197,5 +237,14 @@ CREATE TABLE `user_info` (
   `user_address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `user_birthday` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `user_sign` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_nickname` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_avatar` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of user_info
+-- ----------------------------
+INSERT INTO `user_info` VALUES ('5', '13666666666', null, '13666666666', '女', '福州', '2000-01-01', '买买买！！！', '', 'http://localhost:3000/avatar_uploads/avatar_default.jpg');
+INSERT INTO `user_info` VALUES ('8', '15666666666', null, '15666666666', '女', '', '', '', '莫得感情的机器人', 'http://localhost:3000/avatar_uploads/avatar_default.jpg');
+INSERT INTO `user_info` VALUES ('9', '来来来', 'a163a36c731d1ac664841b6d196a05e3', '18666666666', '男', '', '', '', 'HS', 'http://localhost:3000/avatar_uploads/upload_5a67435fbb680332a6a3aa62014f5aa2.jpg');
