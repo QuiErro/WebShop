@@ -373,7 +373,7 @@ router.post('/api/login_pwd', (req, res) => {
                 }
             } else { // 新用户
                 const addSql = "INSERT INTO user_info(user_name, user_pwd, user_avatar) VALUES (?, ?, ?)";
-                const addSqlParams = [user_name, user_pwd, 'http://localhost:' + config.port + '/avatar_uploads/'];
+                const addSqlParams = [user_name, user_pwd, 'http://localhost:' + config.port + '/avatar_uploads/avatar_default.jpg'];
                 conn.query(addSql, addSqlParams, (error, results, fields) => {
                     results = JSON.parse(JSON.stringify(results));
                     if (!error) {
@@ -508,7 +508,6 @@ router.post('/api/add_shop_cart', (req, res) => {
 router.get('/api/cart_goods', (req, res) => {
     // 获取参数
     let user_id = req.query.user_id;
-
     let sqlStr = "SELECT * FROM cart WHERE user_id =" + user_id;
     conn.query(sqlStr, (error, results, fields) => {
         if (error) {
