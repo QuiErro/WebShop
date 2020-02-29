@@ -289,7 +289,7 @@ router.post('/api/login_code', (req, res) => {
                 });
             } else { // 新用户
                 const addSql = "INSERT INTO user_info(user_name, user_phone, user_avatar) VALUES (?, ?, ?)";
-                const addSqlParams = [phone, phone, 'http://localhost:' + config.port + '/avatar_uploads/'];  // 手机验证码注册，默认用手机号充当用户名
+                const addSqlParams = [phone, phone, 'http://localhost:' + config.port + '/avatar_uploads/avatar_default.jpg'];  // 手机验证码注册，默认用手机号充当用户名
                 conn.query(addSql, addSqlParams, (error, results, fields) => {
                     results = JSON.parse(JSON.stringify(results));
                     if (!error) {

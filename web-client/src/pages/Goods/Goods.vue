@@ -161,7 +161,7 @@
            });
            return;
         }
-        let result =  await postComment(this.goodsDetail[0].goods_id, this.textarea, this.rating, this.userInfo.user_id);
+        let result =  await postComment(this.goodsDetail[0].goods_id, this.textarea, this.rating, this.userInfo.id);
         if(result.success_code === 200){
           MessageBox({
               type: 'success',

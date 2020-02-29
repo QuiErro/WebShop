@@ -8,8 +8,8 @@ export default {
 	port: parseInt(process.env.PORT, 10) || 3000,   // 端口号
 
 	host: '127.0.0.1', // 数据库的地址
-    user: 'root', // 账号
-    password: '****', // 密码
+  user: 'root', // 账号
+  password: '****', // 密码
 	database: 'web_shop', // 数据库名称
 	
 	secret: '123456',  // session
