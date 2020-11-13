@@ -68,6 +68,7 @@
     ```
 
 + `cd web-server`
++ `mkdir -p public/uploads`  新建uploads文件夹保存商品图片
 + 将`web-server`文件夹下的`webshop.sql`导入`MySQL`数据库中
 + `npm install` 安装依赖
 + 修改`web-server/src/config.js`文件，此文件记录项目的全局变量，在文件中找到`password`、`database`、`user`属性，根据你的数据库信息修改它们的值
@@ -76,6 +77,7 @@
 ##### 客户端
 
 - `cd web-client`
+- `mkdir static` 新建static文件夹，防止报错
 - `npm install` 安装依赖
 - `npm run dev` 在本地运行
 - 接着就可以在`http://localhost:8080`下访问到该项目
