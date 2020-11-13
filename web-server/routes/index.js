@@ -187,15 +187,15 @@ router.post('/api/postcomment', (req, res) => {
     conn.query(addSql, addSqlParams, (error, results, fields) => {
         results = JSON.parse(JSON.stringify(results));
         if (!error) {
-			// 更新数据
-			let sqlStr = "UPDATE recommend SET comments_count = comments_count + 1 WHERE goods_id = " + goods_id;
-			conn.query(sqlStr, (error, results, fields) => {
-				if (error) {
-					console.log(error);
-				} else {
-					res.json({success_code: 200, message: "发布成功"});
-				}
-			});
+          // 更新数据
+          let sqlStr = "UPDATE recommend SET comments_count = comments_count + 1 WHERE goods_id = " + goods_id;
+          conn.query(sqlStr, (error, results, fields) => {
+            if (error) {
+              console.log(error);
+            } else {
+              res.json({success_code: 200, message: "发布成功"});
+            }
+          });
         }
      });
 });

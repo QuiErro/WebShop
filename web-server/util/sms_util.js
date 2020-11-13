@@ -16,13 +16,13 @@ function randomCode(length) {
 
 /*向指定号码发送指定验证码*/
 function sendCode(phone, code, callback) {
-    let ACCOUNT_SID = '8aaf070855b647ab0155b9f80994058a';
-    let AUTH_TOKEN = 'aa8aa679414e49df8908ea5b3d043c24';
+    let ACCOUNT_SID = '************';
+    let AUTH_TOKEN = '************';
     let Rest_URL = 'https://app.cloopen.com:8883';
-    let AppID = '8aaf070855b647ab0155b9f809f90590';
+    let AppID = '************';
     //1. 准备请求url
     /*
-     1.使用MD5加密（账户Id + 账户授权令牌 + 时间戳）。其中账户Id和账户授权令牌根据url的验证级别对应主账户。
+     使用MD5加密（账户Id + 账户授权令牌 + 时间戳）。其中账户Id和账户授权令牌根据url的验证级别对应主账户。
      时间戳是当前系统时间，格式"yyyyMMddHHmmss"。时间戳有效时间为24小时，如：20140416142030
      2.SigParameter参数需要大写，如不能写成sig=abcdefg而应该写成sig=ABCDEFG
      */
